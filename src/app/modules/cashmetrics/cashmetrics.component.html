@@ -10,7 +10,7 @@
         matTooltipPosition='above'><mat-icon style="font-size: 26px">sim_card</mat-icon></button>
         <button mat-button (click)="exportToPDF()" matTooltip="Export to PDF"
         matTooltipPosition='above'><mat-icon style="font-size: 26px">picture_as_pdf</mat-icon></button>
-        <button mat-button [matMenuTriggerFor]="below" style="font-size:18px">Scenario<mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+        <button mat-button [matMenuTriggerFor]="below" style="font-size:18px">{{ scenarioName }}<mat-icon matSuffix>keyboard_arrow_down</mat-icon>
         </button>
       <mat-menu #below="matMenu" yPosition="below">
         <button mat-menu-item *ngFor="let index of scenarioArray; let indexOfelement=index;">

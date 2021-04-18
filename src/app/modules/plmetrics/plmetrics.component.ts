@@ -119,6 +119,7 @@ export class PLMetricsComponent implements OnInit {
               EBTMargin: res[j].ebtmargin,
               Taxes: res[j].taxes,
               netIterestExpense: res[j].netinterest,
+			  otherIncome: res[j].otherincome,
               NetIncome: res[j].netincome,
               NetIncomeMargin: res[j].netincomemargin,
             });
@@ -170,6 +171,7 @@ export class PLMetricsComponent implements OnInit {
                       EBTMargin: res[j].ebtmargin,
                       Taxes: res[j].taxes,
                       netIterestExpense: res[j].netinterestdollars,
+					  otherIncome: res[j].otherincome,
                       NetIncome: res[j].netincome,
                       NetIncomeMargin: res[j].netincomemargin,
                     });

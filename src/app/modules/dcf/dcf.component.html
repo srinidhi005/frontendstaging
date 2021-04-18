@@ -1,65 +1,47 @@
-<ng-template [ngIf] = "authService.authServiceLoaded && valuationsLoaded">
+<ng-template [ngIf]="authService.authServiceLoaded && valuationsLoaded">
   <div class="row">
     <div class="col" style="margin: 10px auto">
       <h4>Valuations</h4>
     </div>
   </div>
   <div fxLayout="row">
-    <div fxLayout="row" fxLayoutAlign="start center">
-      <span style="font-weight: bold; font-size: 18px"
-        >{{ companySelected }} - {{ loadedScenario }}
+    <div fxLayout="row" fxLayoutAlign="start center" style="margin-left: .5%;">
+      <span style="font-weight: bold; font-size: 18px">{{ companySelected }} - {{ loadedScenario }}
       </span>
     </div>
 
     <div fxLayout="row" fxFlex fxLayoutAlign="end center" fxLayoutGap="5px">
-      <button
-        mat-button
-        (click)="exportToPdf1()"
-        matTooltip="Export to PDF"
-        matTooltipPosition="above"
-        style="background: #fafafa; color: black; font-size: 26px"
-      >
+      <button mat-button (click)="exportToPdf1()" matTooltip="Export to PDF" matTooltipPosition="above"
+        style="background: #fafafa; color: black; font-size: 26px">
         <mat-icon style="font-size: 26px">picture_as_pdf</mat-icon>
       </button>
-      <button
-        mat-button
-        (click)="addScenario()"
-        matTooltip="Add Scenario"
-        matTooltipPosition="above"
-        style="background: #fafafa; color: black"
-      >
+      <button mat-button (click)="addScenario()" matTooltip="Add Scenario" matTooltipPosition="above"
+        style="background: #fafafa; color: black">
         <mat-icon style="font-size: 26px">add_box</mat-icon>
       </button>
 
-      <button
-        mat-button
-        [matMenuTriggerFor]="belowMenu"
-        style="background: #fafafa; color: black; font-size: 18px"
-      >
+      <button mat-button (click)="saveScenario()" matTooltip="Save Scenario" matTooltipPosition='above'
+      style="background: #fafafa; color: black">
+        <mat-icon style="font-size: 26px">save</mat-icon>
+      </button>
+      <!-- <button (click) = "saveScenario()">
+        Save
+      </button> -->
+
+      <button mat-button [matMenuTriggerFor]="belowMenu" style="background: #fafafa; color: black; font-size: 18px">
         {{ loadedScenario }}<mat-icon matSuffix>keyboard_arrow_down </mat-icon>
       </button>
       <mat-menu #belowMenu="matMenu" yPosition="below">
-        <button
-          mat-menu-item
-          *ngFor="let index of scenarioArray; let indexOfelement = index"
-          style="background: #fafafa; color: black"
-        >
-          <span (click)="loadScenario(indexOfelement)" style="font-size: 18px"
-            >Scenario {{ index }}</span
-          >
+        <button mat-menu-item *ngFor="let index of scenarioArray; let indexOfelement = index"
+          style="background: #fafafa; color: black">
+          <span (click)="loadScenario(indexOfelement)" style="font-size: 18px">Scenario {{ index }}</span>
         </button>
       </mat-menu>
     </div>
   </div>
   <ng-template [ngIf]="dcf">
-    <div
-      class="container"
-      style="padding: 0; margin: 0; max-width: 100%"
-      #firstBlock
-    >
-      <div
-        class="row headers"
-        style="
+    <div class="container" style="padding: 0; margin: 0; max-width: 100%" #firstBlock>
+      <div class="row headers" style="
           font-weight: bold;
           background-color: #164a5b;
           color: white;
@@ -67,42 +49,40 @@
           font-weight: normal;
           border-top-left-radius: 5px;
           border-top-right-radius: 5px;
-        "
-      >
+        ">
         Weighted Average Cost of Capital
       </div>
 
-      <div class="row" style="padding: 18px 15px; background: white">
+      <div class="row" style="padding: 0; margin: 0; background: white">
         <div class="col" style="max-width: 40%">
-          <div
-            class="row headers"
-            style="
+          <div class="row headers" style="
               font-weight: bold;
               background-color: #164a5b;
               color: white;
-              padding: 5px 15px;
               font-weight: normal;
               border-top-left-radius: 5px;
               border-top-right-radius: 5px;
-            "
-          >
+            ">
             Capital Structure
           </div>
           <div class="row" style="background: white">
             <div class="col left-align">Debt to Total Capitalization</div>
             <div class="col-3 right-align">
               {{
-                dcf.waac_calculations?.debt_to_total_cap * 100 | number: '1.2-2'
+                financialObj.get(this.years[0]).debtToTotalCap  | number: '1.2-2'
               }}
               %
+              <mat-icon style="display: inline; margin: auto 5px; cursor: pointer" (click)="
+              openPopUpModal( wacc, 'debtToTotalCap', 'Debt to Total')">
+                edit</mat-icon>
             </div>
           </div>
           <div class="row" style="background: white">
             <div class="col left-align">Equity to Total Capitalization</div>
             <div class="col-3 right-align">
               {{
-                dcf.waac_calculations?.equity_to_total_cap * 100
-                  | number: '1.2-2'
+                financialObj.get(this.years[0]).equityToTotalCap 
+              | number: '1.2-2'
               }}
               %
             </div>
@@ -112,47 +92,49 @@
               Debt / Equity
             </div>
             <div class="col-3 right-align" style="font-weight: bold">
-              {{ dcf.waac_calculations?.debt_equity * 100 | number: '1.2-2' }}%
+              {{ financialObj.get(this.years[0]).debtEquity  | number: '1.2-2' }}%
             </div>
           </div>
 
-          <div
-            class="row headers"
-            style="
+          <div class="row headers" style="
               font-weight: bold;
               background-color: #164a5b;
               color: white;
-              padding: 5px 15px;
               font-weight: normal;
               border-top-left-radius: 5px;
               border-top-right-radius: 5px;
-            "
-          >
+            ">
             Cost of Equity
           </div>
           <div class="row" style="background: white">
             <div class="col left-align">Risk Free Rate (10-Year Treasury)</div>
             <div class="col-3 right-align">
               {{
-                dcf.waac_calculations?.risk_free_rate * 100 | number: '1.2-2'
+                this.financialObj.get(this.years[0]).riskFreeRate  | number: '1.2-2'
               }}
               %
+              <mat-icon style="display: inline; margin: auto 5px; cursor: pointer" (click)="
+              openPopUpModal( wacc, 'riskFreeRate', 'Risk Free Rate')">
+                edit</mat-icon>
             </div>
           </div>
           <div class="row" style="background: white">
             <div class="col left-align">Equity Risk Premium</div>
             <div class="col-3 right-align">
               {{
-                dcf.waac_calculations?.equity_risk_premium * 100
-                  | number: '1.2-2'
+                this.financialObj.get(this.years[0]).equityRiskPremium 
+              | number: '1.2-2'
               }}
               %
+              <mat-icon style="display: inline; margin: auto 5px; cursor: pointer" (click)="
+              openPopUpModal( wacc, 'equityRiskPremium', 'Equity Risk Premium')">
+                edit</mat-icon>
             </div>
           </div>
           <div class="row" style="background: white">
             <div class="col left-align">Levered Beta</div>
             <div class="col-3 right-align">
-              {{ dcf.waac_calculations?.levered_beta | number: '1.2-2' }}%
+              {{ this.financialObj.get(this.years[0]).leveredBeta  | number: '1.2-2' }}
             </div>
           </div>
           <div class="row highlight">
@@ -162,36 +144,35 @@
 
             <div class="col-3 right-align" style="font-weight: bold">
               {{
-                dcf.waac_calculations?.cost_of_equity * 100 | number: '1.2-2'
+                this.financialObj.get(this.years[0]).costOfEquity  | number: '1.2-2'
               }}%
             </div>
           </div>
 
-          <div
-            class="row headers"
-            style="
+          <div class="row headers" style="
               font-weight: bold;
               background-color: #164a5b;
               color: white;
-              padding: 5px 15px;
               font-weight: normal;
               border-top-left-radius: 5px;
               border-top-right-radius: 5px;
-            "
-          >
+            ">
             Cost of Debt
           </div>
 
           <div class="row" style="background: white">
             <div class="col left-align">Cost of Debt</div>
             <div class="col-3 right-align">
-              {{ dcf.waac_calculations?.cost_of_debt * 100 | number: '1.2-2' }}%
+              {{ this.financialObj.get(this.years[0]).costOfDebt  | number: '1.2-2' }}%
+              <mat-icon style="display: inline; margin: auto 5px; cursor: pointer" (click)="
+              openPopUpModal( wacc, 'costOfDebt', 'Cost of Debt')">
+                edit</mat-icon>
             </div>
           </div>
           <div class="row" style="background: white">
             <div class="col left-align">Tax Rate</div>
             <div class="col-3 right-align">
-              {{ dcf.waac_calculations?.tax_rate * 100 | number: '1.2-2' }}%
+              {{ this.financialObj.get(this.years[0]).taxRate  | number: '1.2-2' }}%
             </div>
           </div>
           <div class="row highlight">
@@ -200,97 +181,97 @@
             </div>
             <div class="col-3 right-align" style="font-weight: bold">
               {{
-                dcf.waac_calculations?.after_tax_debt_cost * 100
-                  | number: '1.2-2'
+                this.financialObj.get(this.years[0]).afterTaxCostOfDebt 
+              | number: '1.2-2'
               }}
               %
             </div>
           </div>
 
-          <tr>
-            <div class="row highlight">
-              <div class="col left-align" style="font-weight: bold">WACC</div>
-              <ng-template ngFor [ngForOf]="financials" let-rev let-i="index">
-                <ng-template [ngIf]="i == 5">
-                  <div
-                    class="col-3 right-align"
-                    style="font-weight: bold; width: 475px"
-                  >
-                    <ng-template [ngIf]="rev['wacc'] >= 0">
-                      {{ rev['wacc'] | number: '1.2-2' }}%
-                    </ng-template>
-                    <ng-template [ngIf]="rev['wacc'] < 0">
-                      ({{ -rev['wacc'] | number: '1.2-2' }}%)
-                    </ng-template>
-                    <mat-icon
-                      style="display: inline; margin: auto 5px; cursor: pointer"
-                      (click)="openPopUpModal(wacc)"
-                      >edit</mat-icon
-                    >
-                  </div>
-                </ng-template>
+          <div class="row highlight">
+            <div class="col left-align" style="font-weight: bold">WACC</div>
+            <div class="col-3 right-align" style="font-weight: bold">
+              {{
+                this.financialObj.get(this.years[0]).wacc 
+              | number: '1.2-2'
+              }}
+              %
+              <!-- <mat-icon style="display: inline; margin: auto 5px; cursor: pointer" (click)="
+                  openPopUpModal( wacc, 'waac', 'WACC')">
+                    edit</mat-icon> -->
+            </div>
+            <!-- <ng-template ngFor [ngForOf]="financials" let-rev let-i="index">
+              <ng-template [ngIf]="i == 5">
+                <div class="col-3 right-align" style="font-weight: bold; width: 475px">
+                  <ng-template [ngIf]="rev['wacc'] >= 0">
+                    {{ rev['wacc'] | number: '1.2-2' }}%
+                  </ng-template>
+                  <ng-template [ngIf]="rev['wacc'] < 0">
+                    ({{ -rev['wacc'] | number: '1.2-2' }}%)
+                  </ng-template>
+                  <mat-icon style="display: inline; margin: auto 5px; cursor: pointer" (click)="
+                  openPopUpModal( wacc, 'wacc', 'WACC')">
+                    edit</mat-icon>
+                </div>
               </ng-template>
-            </div>
+            </ng-template> -->
+          </div>
 
-            <div
-              class="row headers"
-              style="
-                font-weight: bold;
-                background-color: #164a5b;
-                color: white;
-                padding: 5px 15px;
-                font-weight: normal;
-                border-top-left-radius: 5px;
-                border-top-right-radius: 5px;
-              "
-            >
-              Assumptions
-            </div>
-
-            <div class="row" style="background: white">
-              <div class="col left-align">Corporate Tax Rate</div>
-              <div class="col-3 right-align">21%</div>
-            </div>
-            <div class="row" style="background: white">
-              <div class="col left-align">EBITDA Exit Multiple</div>
-              <div class="col-3 right-align">40.0x</div>
-            </div>
-            <div class="row highlight">
-              <div class="col left-align" style="font-weight: bold">
-                After-Tax Cost of Debt
-              </div>
-              <div class="col-3 right-align" style="font-weight: bold">
-                {{
-                  dcf.waac_calculations?.after_tax_debt_cost * 100
-                    | number: '1.2-2'
-                }}
-                %
-              </div>
-            </div>
-          </tr>
-        </div>
-
-        <div
-          class="col-8"
-          style="background: white; padding: 5px 10px; max-width: 60%"
-          *ngIf="dcf.data && dcf.data.length > 0"
-        >
-          <div
-            class="row headers"
-            style="
+          <div class="row headers" style="
               font-weight: bold;
               background-color: #164a5b;
               color: white;
-              padding: 5px 15px;
               font-weight: normal;
               border-top-left-radius: 5px;
               border-top-right-radius: 5px;
-            "
-          >
+            ">
+            Assumptions
+          </div>
+
+          <div class="row" style="background: white">
+            <div class="col left-align">Corporate Tax Rate</div>
+            <div class="col-3 right-align"> {{ this.financialObj.get(this.years[0]).taxRate  | number: '1.2-2' }}%
+              <mat-icon style="display: inline; margin: auto 5px; cursor: pointer" (click)="
+              openPopUpModal( wacc, 'taxRate', 'Corporate Tax Rate')">
+                    edit</mat-icon>
+            </div>
+          </div>
+          <div class="row" style="background: white">
+            <div class="col left-align">EBITDA Exit Multiple</div>
+            <div class="col-3 right-align">
+              {{ this.financialObj.get(this.years[0]).ebitdaExitMultiple | number: '1.2-2' }}
+              <mat-icon style="display: inline; margin: auto 5px; cursor: pointer">edit</mat-icon>
+            </div>
+          </div>
+          <!-- <div class="row highlight">
+            <div class="col left-align" style="font-weight: bold">
+              After-Tax Cost of Debt
+            </div>
+            <div class="col-3 right-align" style="font-weight: bold">
+              {{
+              dcf.waac_calculations?.after_tax_debt_cost 
+              | number: '1.2-2'
+              }}
+              %
+            </div>
+          </div> -->
+        </div>
+
+        <div class="col-8" style="background: white; padding: 5px 10px; max-width: 60%; padding-right: 0"
+          *ngIf="dcf.data && dcf.data.length > 0">
+          <div class="row headers" style="
+              font-weight: bold;
+              background-color: #164a5b;
+              color: white;
+              padding: 5px;
+              font-weight: normal;
+              border-top-left-radius: 5px;
+              border-top-right-radius: 5px;
+            ">
             <div class="col-2 left-align" style="border-bottom: 0px">
               Ticker
             </div>
-            <div class="col-2 left-align" style="border-bottom: 0px">
+            <div class="col-2 reduced-width left-align" style="border-bottom: 0px">
               Company
             </div>
             <div class="col-2 right-align" style="border-bottom: 0px">
@@ -349,22 +330,13 @@
     </div>
   </ng-template>
 
-  <div
-    fxLayout="row"
-    fxLayoutAlign="space-between center"
-    fxLayoutGap="20px"
-    id="myTable"
-  >
+  <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="20px" id="myTable">
     <div fxFlex="100">
-      <mat-progress-bar
-        mode="indeterminate"
-        *ngIf="progressBar"
-      ></mat-progress-bar>
+      <mat-progress-bar mode="indeterminate" *ngIf="progressBar"></mat-progress-bar>
 
       <div class="mat-elevation-z8" #unleveredFreeCashFlow>
         <div>
-          <th
-            style="
+          <th style="
               font-weight: bold;
               background-color: #164a5b;
               color: white;
@@ -373,47 +345,26 @@
               border-top-left-radius: 5px;
               width: 5000px;
               border-top-right-radius: 5px;
-            "
-          >
+            ">
             Unlevered Free Cash Flow Profile
           </th>
 
           <table class="table table-striped">
             <tr style="height: 35px">
-              <th
-                class="tableheaderClass leftAlign"
-                style="font-weight: normal"
-              >
+              <th class="tableheaderClass leftAlign" style="font-weight: normal">
                 (in millions)
               </th>
-              <th
-                class="tableheaderClass rightAlign"
-                style="font-style: normal"
-              >
+              <th class="tableheaderClass rightAlign" style="font-style: normal">
                 Total
               </th>
-              <ng-template
-                ngFor
-                [ngForOf]="years"
-                let-year
-                let-rowIndex="index"
-              >
-                <ng-template
-                  [ngIf]="rowIndex <= years.length - 3"
-                  [ngIfElse]="actualYear"
-                >
-                  <th
-                    class="tableheaderYearClass rightAlign"
-                    [class.borderRadius]="rowIndex == years.length - 1"
-                  >
-                    <ng-template
-                      [ngIf]="year.indexOf('-') >= 0"
-                      [ngIfElse]="actualYear"
-                    >
+              <ng-template ngFor [ngForOf]="years" let-year let-rowIndex="index">
+                <ng-template [ngIf]="rowIndex <= years.length - 3" [ngIfElse]="actualYear">
+                  <th class="tableheaderYearClass rightAlign" [class.borderRadius]="rowIndex == years.length - 1">
+                    <ng-template [ngIf]="year.indexOf('-') >= 0" [ngIfElse]="actualYear">
                       Total
                     </ng-template>
                     <ng-template #actualYear>
-                      {{ year }}
+                      {{ year }}E
                     </ng-template>
                   </th>
                 </ng-template>
@@ -423,18 +374,15 @@
             <tr>
               <td class="normalClass leftAlign">EBITDA</td>
               <td class="normalClass rightAlign">
-                $ {{ financials[5]?.EBITDA | number: '1.0-0' }}
+                <ng-template [ngIf]="financials[5]?.EBITDA >= 0">
+                  $ {{ financials[5]?.EBITDA | number: '1.0-0' }}
+                </ng-template>
+                <ng-template [ngIf]="financials[5]?.EBITDA < 0">
+                  ($ {{ -financials[5]?.EBITDA | number: '1.0-0' }})
+                </ng-template>
               </td>
-              <ng-template
-                ngFor
-                [ngForOf]="financials"
-                let-rev
-                let-rowIndex="index"
-              >
-                <td
-                  class="normalClass rightAlign"
-                  *ngIf="rowIndex <= years.length - 3"
-                >
+              <ng-template ngFor [ngForOf]="financials" let-rev let-rowIndex="index">
+                <td class="normalClass rightAlign" *ngIf="rowIndex <= years.length - 3">
                   <ng-template [ngIf]="rev['EBITDA'] >= 0">
                     $ {{ rev['EBITDA'] | number: '1.0-0' }}
                   </ng-template>
@@ -450,19 +398,15 @@
                 (–) Depreciation & Amortization
               </td>
               <td class="normalClass rightAlign">
-                $
-                {{ financials[5]?.DepreciationAmortization | number: '1.0-0' }}
+                <ng-template [ngIf]="financials[5]?.DepreciationAmortization >= 0">
+                  $ {{ financials[5]?.DepreciationAmortization | number: '1.0-0' }}
+                </ng-template>
+                <ng-template [ngIf]="financials[5]?.DepreciationAmortization < 0">
+                  ($ {{ -financials[5]?.DepreciationAmortization | number: '1.0-0' }})
+                </ng-template>
               </td>
-              <ng-template
-                ngFor
-                [ngForOf]="financials"
-                let-rev
-                let-rowIndex="index"
-              >
-                <td
-                  class="normalClass rightAlign"
-                  *ngIf="rowIndex <= years.length - 3"
-                >
+              <ng-template ngFor [ngForOf]="financials" let-rev let-rowIndex="index">
+                <td class="normalClass rightAlign" *ngIf="rowIndex <= years.length - 3">
                   <ng-template [ngIf]="rev['DepreciationAmortization'] >= 0">
                     $ {{ rev['DepreciationAmortization'] | number: '1.0-0' }}
                   </ng-template>
@@ -475,18 +419,15 @@
             <tr>
               <td class="tableboldClass leftAlign">EBIT</td>
               <td class="tableboldClass rightAlign">
-                $ {{ financials[5]?.EBIT | number: '1.0-0' }}
+                <ng-template [ngIf]="financials[5]?.EBIT >= 0">
+                  $ {{ financials[5]?.EBIT | number: '1.0-0' }}
+                </ng-template>
+                <ng-template [ngIf]="financials[5]?.EBIT < 0">
+                  ($ {{ -financials[5]?.EBIT | number: '1.0-0' }})
+                </ng-template>
               </td>
-              <ng-template
-                ngFor
-                [ngForOf]="financials"
-                let-rev
-                let-rowIndex="index"
-              >
-                <td
-                  class="tableboldClass rightAlign"
-                  *ngIf="rowIndex <= years.length - 3"
-                >
+              <ng-template ngFor [ngForOf]="financials" let-rev let-rowIndex="index">
+                <td class="tableboldClass rightAlign" *ngIf="rowIndex <= years.length - 3">
                   <ng-template [ngIf]="rev['EBIT'] >= 0">
                     $ {{ rev['EBIT'] | number: '1.0-0' }}
                   </ng-template>
@@ -500,31 +441,19 @@
             <tr>
               <td class="normalClass leftAlign">(+/–) Net Interest Expense</td>
               <td class="normalClass rightAlign">
-                <ng-template
-                  [ngIf]="
+                <ng-template [ngIf]="
                     financials[5] && financials[5]?.NetInterestExpense >= 0
-                  "
-                >
+                  ">
                   ${{ financials[5].NetInterestExpense | number: '1.0-0' }}
                 </ng-template>
-                <ng-template
-                  [ngIf]="
+                <ng-template [ngIf]="
                     financials[5] && financials[5]?.NetInterestExpense < 0
-                  "
-                >
+                  ">
                   (${{ -financials[5].NetInterestExpense | number: '1.0-0' }})
                 </ng-template>
               </td>
-              <ng-template
-                ngFor
-                [ngForOf]="financials"
-                let-rev
-                let-rowIndex="index"
-              >
-                <td
-                  class="normalClass rightAlign"
-                  *ngIf="rowIndex <= years.length - 3"
-                >
+              <ng-template ngFor [ngForOf]="financials" let-rev let-rowIndex="index">
+                <td class="normalClass rightAlign" *ngIf="rowIndex <= years.length - 3">
                   <ng-template [ngIf]="rev['NetInterestExpense'] >= 0">
                     $ {{ rev['NetInterestExpense'] | number: '1.0-0' }}
                   </ng-template>
@@ -538,18 +467,15 @@
             <tr>
               <td class="tableboldClass">EBT</td>
               <td class="tableboldClass rightAlign">
-                $ {{ financials[5]?.EBT | number: '1.0-0' }}
+                <ng-template [ngIf]="financials[5]?.EBT >= 0">
+                  $ {{ financials[5]?.EBT | number: '1.0-0' }}
+                </ng-template>
+                <ng-template [ngIf]="financials[5]?.EBT < 0">
+                  ($ {{ -financials[5]?.EBT | number: '1.0-0' }})
+                </ng-template>
               </td>
-              <ng-template
-                ngFor
-                [ngForOf]="financials"
-                let-rev
-                let-rowIndex="index"
-              >
-                <td
-                  class="tableboldClass rightAlign"
-                  *ngIf="rowIndex <= years.length - 3"
-                >
+              <ng-template ngFor [ngForOf]="financials" let-rev let-rowIndex="index">
+                <td class="tableboldClass rightAlign" *ngIf="rowIndex <= years.length - 3">
                   <ng-template [ngIf]="rev['EBT'] >= 0">
                     $ {{ rev['EBT'] | number: '1.0-0' }}
                   </ng-template>
@@ -563,18 +489,15 @@
             <tr>
               <td class="normalClass leftAlign">(–) NOLs Utilized</td>
               <td class="normalClass rightAlign">
-                $ {{ financials[5]?.NOLsUtilized | number: '1.0-0' }}
+                <ng-template [ngIf]="financials[5]?.NOLsUtilized >= 0">
+                  $ {{ financials[5]?.NOLsUtilized | number: '1.0-0' }}
+                </ng-template>
+                <ng-template [ngIf]="financials[5]?.NOLsUtilized < 0">
+                  ($ {{ -financials[5]?.NOLsUtilized | number: '1.0-0' }})
+                </ng-template>
               </td>
-              <ng-template
-                ngFor
-                [ngForOf]="financials"
-                let-rev
-                let-rowIndex="index"
-              >
-                <td
-                  class="normalClass rightAlign"
-                  *ngIf="rowIndex <= years.length - 3"
-                >
+              <ng-template ngFor [ngForOf]="financials" let-rev let-rowIndex="index">
+                <td class="normalClass rightAlign" *ngIf="rowIndex <= years.length - 3">
                   <ng-template [ngIf]="rev['NOLsUtilized'] >= 0">
                     $ {{ rev['NOLsUtilized'] | number: '1.0-0' }}
                   </ng-template>
@@ -588,18 +511,15 @@
             <tr>
               <td class="tableboldClass leftAlign">EBT Post NOL Utilization</td>
               <td class="normalClass rightAlign">
-                $ {{ financials[5]?.EBTPostNOLUtilization | number: '1.0-0' }}
+                <ng-template [ngIf]="financials[5]?.EBTPostNOLUtilization >= 0">
+                  $ {{ financials[5]?.EBTPostNOLUtilization | number: '1.0-0' }}
+                </ng-template>
+                <ng-template [ngIf]="financials[5]?.EBTPostNOLUtilization < 0">
+                  ($ {{ -financials[5]?.EBTPostNOLUtilization | number: '1.0-0' }})
+                </ng-template>
               </td>
-              <ng-template
-                ngFor
-                [ngForOf]="financials"
-                let-rev
-                let-rowIndex="index"
-              >
-                <td
-                  class="tableboldClass rightAlign"
-                  *ngIf="rowIndex <= years.length - 3"
-                >
+              <ng-template ngFor [ngForOf]="financials" let-rev let-rowIndex="index">
+                <td class="tableboldClass rightAlign" *ngIf="rowIndex <= years.length - 3">
                   <ng-template [ngIf]="rev['EBTPostNOLUtilization'] >= 0">
                     $ {{ rev['EBTPostNOLUtilization'] | number: '1.0-0' }}
                   </ng-template>
@@ -614,27 +534,15 @@
               <td class="normalClass leftAlign">(–) Cash Taxes</td>
 
               <td class="normalClass rightAlign">
-                <ng-template
-                  [ngIf]="financials[5] && financials[5]?.CashTaxes >= 0"
-                >
+                <ng-template [ngIf]="financials[5] && financials[5]?.CashTaxes >= 0">
                   ${{ financials[5]?.CashTaxes | number: '1.0-0' }}
                 </ng-template>
-                <ng-template
-                  [ngIf]="financials[5] && financials[5]?.CashTaxes < 0"
-                >
+                <ng-template [ngIf]="financials[5] && financials[5]?.CashTaxes < 0">
                   (${{ -financials[5]?.CashTaxes | number: '1.0-0' }})
                 </ng-template>
               </td>
-              <ng-template
-                ngFor
-                [ngForOf]="financials"
-                let-rev
-                let-rowIndex="index"
-              >
-                <td
-                  class="normalClass rightAlign"
-                  *ngIf="rowIndex <= years.length - 3"
-                >
+              <ng-template ngFor [ngForOf]="financials" let-rev let-rowIndex="index">
+                <td class="normalClass rightAlign" *ngIf="rowIndex <= years.length - 3">
                   <ng-template [ngIf]="rev['CashTaxes'] >= 0">
                     $ {{ rev['CashTaxes'] | number: '1.0-0' }}
                   </ng-template>
@@ -650,55 +558,39 @@
                 Earnings Before Interest After Taxes (EBIAT)
               </td>
               <td class="tableboldClass rightAlign">
-                <ng-template
-                  [ngIf]="
+                <ng-template [ngIf]="
                     financials[5] &&
                     financials[5]?.EarningsBeforeInterestAfterTaxes >= 0
-                  "
-                >
+                  ">
                   $
                   {{
-                    financials[5]?.EarningsBeforeInterestAfterTaxes
-                      | number: '1.0-0'
+                  financials[5]?.EarningsBeforeInterestAfterTaxes
+                  | number: '1.0-0'
                   }}
                 </ng-template>
-                <ng-template
-                  [ngIf]="
+                <ng-template [ngIf]="
                     financials[5] &&
                     financials[5]?.EarningsBeforeInterestAfterTaxes < 0
-                  "
-                >
+                  ">
                   (${{
-                    -financials[5]?.EarningsBeforeInterestAfterTaxes
-                      | number: '1.0-0'
+                  -financials[5]?.EarningsBeforeInterestAfterTaxes
+                  | number: '1.0-0'
                   }})
                 </ng-template>
               </td>
-              <ng-template
-                ngFor
-                [ngForOf]="financials"
-                let-rev
-                let-rowIndex="index"
-              >
-                <td
-                  class="tableboldClass rightAlign"
-                  *ngIf="rowIndex <= years.length - 3"
-                >
-                  <ng-template
-                    [ngIf]="rev['EarningsBeforeInterestAfterTaxes'] >= 0"
-                  >
+              <ng-template ngFor [ngForOf]="financials" let-rev let-rowIndex="index">
+                <td class="tableboldClass rightAlign" *ngIf="rowIndex <= years.length - 3">
+                  <ng-template [ngIf]="rev['EarningsBeforeInterestAfterTaxes'] >= 0">
                     $
                     {{
-                      rev['EarningsBeforeInterestAfterTaxes'] | number: '1.0-0'
+                    rev['EarningsBeforeInterestAfterTaxes'] | number: '1.0-0'
                     }}
                   </ng-template>
-                  <ng-template
-                    [ngIf]="rev['EarningsBeforeInterestAfterTaxes'] < 0"
-                  >
+                  <ng-template [ngIf]="rev['EarningsBeforeInterestAfterTaxes'] < 0">
                     ($
                     {{
-                      -rev['EarningsBeforeInterestAfterTaxes']
-                        | number: '1.0-0'
+                    -rev['EarningsBeforeInterestAfterTaxes']
+                    | number: '1.0-0'
                     }})
                   </ng-template>
                 </td>
@@ -717,16 +609,8 @@
                   (${{ -financials[5].DA | number: '1.0-0' }})
                 </ng-template>
               </td>
-              <ng-template
-                ngFor
-                [ngForOf]="financials"
-                let-rev
-                let-rowIndex="index"
-              >
-                <td
-                  class="normalClass rightAlign"
-                  *ngIf="rowIndex <= years.length - 3"
-                >
+              <ng-template ngFor [ngForOf]="financials" let-rev let-rowIndex="index">
+                <td class="normalClass rightAlign" *ngIf="rowIndex <= years.length - 3">
                   <ng-template [ngIf]="rev['DA'] >= 0">
                     $ {{ rev['DA'] | number: '1.0-0' }}
                   </ng-template>
@@ -740,25 +624,15 @@
             <tr>
               <td class="normalClass leftAlign">(–) Capex</td>
               <td class="normalClass rightAlign">
-                <ng-template
-                  [ngIf]="financials[5] && financials[5]?.Capex >= 0"
-                >
+                <ng-template [ngIf]="financials[5] && financials[5]?.Capex >= 0">
                   ${{ financials[5].Capex | number: '1.0-0' }}
                 </ng-template>
                 <ng-template [ngIf]="financials[5] && financials[5]?.Capex < 0">
                   (${{ -financials[5].Capex | number: '1.0-0' }})
                 </ng-template>
               </td>
-              <ng-template
-                ngFor
-                [ngForOf]="financials"
-                let-rev
-                let-rowIndex="index"
-              >
-                <td
-                  class="normalClass rightAlign"
-                  *ngIf="rowIndex <= years.length - 3"
-                >
+              <ng-template ngFor [ngForOf]="financials" let-rev let-rowIndex="index">
+                <td class="normalClass rightAlign" *ngIf="rowIndex <= years.length - 3">
                   <ng-template [ngIf]="rev['Capex'] >= 0">
                     $ {{ rev['Capex'] | number: '1.0-0' }}
                   </ng-template>
@@ -774,37 +648,25 @@
                 (+/–) Change in Net Working Capital
               </td>
               <td class="normalClass rightAlign">
-                <ng-template
-                  [ngIf]="
+                <ng-template [ngIf]="
                     financials[5] &&
                     financials[5]?.ChangeinNetWorkingCapital >= 0
-                  "
-                >
+                  ">
                   ${{
-                    financials[5].ChangeinNetWorkingCapital | number: '1.0-0'
+                  financials[5].ChangeinNetWorkingCapital | number: '1.0-0'
                   }}
                 </ng-template>
-                <ng-template
-                  [ngIf]="
+                <ng-template [ngIf]="
                     financials[5] &&
                     financials[5]?.ChangeinNetWorkingCapital < 0
-                  "
-                >
+                  ">
                   (${{
-                    -financials[5].ChangeinNetWorkingCapital | number: '1.0-0'
+                  -financials[5].ChangeinNetWorkingCapital | number: '1.0-0'
                   }})
                 </ng-template>
               </td>
-              <ng-template
-                ngFor
-                [ngForOf]="financials"
-                let-rev
-                let-rowIndex="index"
-              >
-                <td
-                  class="normalClass rightAlign"
-                  *ngIf="rowIndex <= years.length - 3"
-                >
+              <ng-template ngFor [ngForOf]="financials" let-rev let-rowIndex="index">
+                <td class="normalClass rightAlign" *ngIf="rowIndex <= years.length - 3">
                   <ng-template [ngIf]="rev['ChangeinNetWorkingCapital'] >= 0">
                     $ {{ rev['ChangeinNetWorkingCapital'] | number: '1.0-0' }}
                   </ng-template>
@@ -819,18 +681,15 @@
             <tr>
               <td class="tableboldClass leftAlign">Unlevered Free Cash Flow</td>
               <td class="tableboldClass rightAlign">
-                $ {{ financials[5]?.UnleveredFreeCashFlow | number: '1.0-0' }}
+                <ng-template [ngIf]="financials[5]?.UnleveredFreeCashFlow >= 0">
+                  $ {{ financials[5]?.UnleveredFreeCashFlow | number: '1.0-0' }}
+                </ng-template>
+                <ng-template [ngIf]="financials[5]?.UnleveredFreeCashFlow < 0">
+                  ($ {{ -financials[5]?.UnleveredFreeCashFlow | number: '1.0-0' }})
+                </ng-template>
               </td>
-              <ng-template
-                ngFor
-                [ngForOf]="financials"
-                let-rev
-                let-rowIndex="index"
-              >
-                <td
-                  class="tableboldClass rightAlign"
-                  *ngIf="rowIndex <= years.length - 3"
-                >
+              <ng-template ngFor [ngForOf]="financials" let-rev let-rowIndex="index">
+                <td class="tableboldClass rightAlign" *ngIf="rowIndex <= years.length - 3">
                   <ng-template [ngIf]="rev['UnleveredFreeCashFlow'] >= 0">
                     $ {{ rev['UnleveredFreeCashFlow'] | number: '1.0-0' }}
                   </ng-template>
@@ -846,21 +705,12 @@
     </div>
   </div>
 
-  <div
-    fxLayout="row"
-    fxLayoutAlign="space-between center"
-    fxLayoutGap="20px"
-    id="myTable"
-  >
+  <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="20px" id="myTable">
     <div fxFlex="100">
-      <mat-progress-bar
-        mode="indeterminate"
-        *ngIf="progressBar"
-      ></mat-progress-bar>
+      <mat-progress-bar mode="indeterminate" *ngIf="progressBar"></mat-progress-bar>
       <div class="mat-elevation-z8" #valuations>
         <div>
-          <th
-            style="
+          <th style="
               font-weight: bold;
               background-color: #164a5b;
               color: white;
@@ -869,47 +719,29 @@
               border-top-left-radius: 5px;
               width: 5000px;
               border-top-right-radius: 5px;
-            "
-          >
+            ">
             Valuations
           </th>
 
           <table class="table table-striped">
             <tr style="height: 35px">
-              <th
-                class="tableheaderClass leftAlign"
-                style="font-weight: normal"
-              >
+              <th class="tableheaderClass leftAlign" style="font-weight: normal">
                 (in millions)
               </th>
-              <th
-                class="tableheaderClass rightAlign"
-                style="font-style: normal"
-              >
+              <th class="tableheaderClass rightAlign" style="font-style: normal">
                 Total
               </th>
-              <ng-template
-                ngFor
-                [ngForOf]="years"
-                let-year
-                let-rowIndex="index"
-              >
+              <ng-template ngFor [ngForOf]="years" let-year let-rowIndex="index">
                 <ng-template [ngIf]="rowIndex != 5">
-                  <th
-                    class="tableheaderYearClass rightAlign"
-                    style="border-top-right-radius: 0px"
-                    [class.borderRadius]="rowIndex == years.length - 1"
-                  >
-                    <ng-template
-                      [ngIf]="year.indexOf('-') >= 0"
-                      [ngIfElse]="ActualYear"
-                    >
+                  <th class="tableheaderYearClass rightAlign" style="border-top-right-radius: 0px"
+                    [class.borderRadius]="rowIndex == years.length - 1">
+                    <ng-template [ngIf]="year.indexOf('-') >= 0" [ngIfElse]="ActualYear">
                       Total
                     </ng-template>
 
                     <ng-template #ActualYear>
                       <ng-template [ngIf]="rowIndex != 6">
-                        {{ year }}
+                        {{ year }}E
                       </ng-template>
                       <ng-template [ngIf]="rowIndex == 6">
                         Terminal
@@ -944,7 +776,7 @@
               <td class="normalClass rightAlign"></td>
               <ng-template ngFor [ngForOf]="financials" let-rev let-i="index">
                 <ng-template [ngIf]="i != 5">
-                  <td class="normalClass rightAlign">
+                  <td class="normalClass rightAlign italic-font">
                     <ng-template [ngIf]="rev['DiscountFactor'] >= 0">
                       {{ rev['DiscountFactor'] | number: '1.0-0' }}%
                     </ng-template>
@@ -958,14 +790,13 @@
             <tr>
               <td class="normalClass leftAlign">Present Value of FCFs</td>
               <td class="normalClass rightAlign">
-                $
-                {{
-                  financials[0]?.PresentFcf +
-                    financials[1]?.PresentFcf +
-                    financials[2]?.PresentFcf +
-                    financials[3]?.PresentFcf +
-                    financials[4]?.PresentFcf | number: '1.0-0'
-                }}
+                <ng-template [ngIf]="financials[5].PresentFcf >= 0">
+                  $ {{ financials[5].PresentFcf | number: '1.0-0' }}
+                </ng-template>
+                <ng-template [ngIf]="financials[5].PresentFcf < 0">
+                  ($ {{ -financials[5].PresentFcf | number: '1.0-0' }})
+                </ng-template>
+                
               </td>
               <ng-template ngFor [ngForOf]="financials" let-rev let-i="index">
                 <ng-template [ngIf]="i != 5">
@@ -986,14 +817,15 @@
                 Present Value of Terminal Value
               </td>
               <td class="normalClass rightAlign">
-                $
-                {{
-                  (40 * financials[4]?.EBITDA * financials[6]?.DiscountFactor) /
-                    100 | number: '1.0-0'
-                }}
+                <ng-template [ngIf]="financials[5]?.PresentTerminalValue >= 0">
+                  $ {{ financials[5]?.PresentTerminalValue | number: '1.0-0' }}
+                </ng-template>
+                <ng-template [ngIf]="financials[5]?.PresentTerminalValue < 0">
+                  ($ {{ -financials[5]?.PresentTerminalValue | number: '1.0-0' }})
+                </ng-template>
               </td>
               <ng-template ngFor [ngForOf]="financials" let-rev let-i="index">
-                <ng-template [ngIf]="i != 5 && i != 6">
+                <ng-template [ngIf]="i != 5">
                   <td class="normalClass rightAlign">
                     <ng-template [ngIf]="rev['PresentTerminalValue'] >= 0">
                       $ {{ rev['PresentTerminalValue'] | number: '1.0-0' }}
@@ -1003,36 +835,22 @@
                     </ng-template>
                   </td>
                 </ng-template>
-                <ng-template [ngIf]="i == 5">
-                  <td class="normalClass rightAlign">
-                    $
-                    {{
-                      (40 *
-                        financials[4]?.EBITDA *
-                        financials[6]?.DiscountFactor) /
-                        100 | number: '1.0-0'
-                    }}
-                  </td>
-                </ng-template>
+               
               </ng-template>
             </tr>
 
             <tr>
               <td class="tableboldClass">Total</td>
               <td class="tableboldClass rightAlign">
-                $
-                {{
-                  (40 * financials[4]?.EBITDA * financials[6]?.DiscountFactor) /
-                    100 +
-                    financials[0]?.PresentFcf +
-                    financials[1]?.PresentFcf +
-                    financials[2]?.PresentFcf +
-                    financials[3]?.PresentFcf +
-                    financials[4]?.PresentFcf | number: '1.0-0'
-                }}
+                <ng-template [ngIf]="financials[5]?.Total >= 0">
+                  $ {{ financials[5]?.Total | number: '1.0-0' }}
+                </ng-template>
+                <ng-template [ngIf]="financials[5]?.Total < 0">
+                  ($ {{ -financials[5]?.Total | number: '1.0-0' }})
+                </ng-template>
               </td>
               <ng-template ngFor [ngForOf]="financials" let-rev let-i="index">
-                <ng-template [ngIf]="i != 5 && i != 6">
+                <ng-template [ngIf]="i != 5">
                   <td class="tableboldClass rightAlign">
                     <ng-template [ngIf]="rev['Total'] >= 0">
                       $ {{ rev['Total'] | number: '1.0-0' }}
@@ -1040,19 +858,6 @@
                     <ng-template [ngIf]="rev['Total'] < 0">
                       ($ {{ -rev['Total'] | number: '1.0-0' }})
                     </ng-template>
-                  </td>
-                </ng-template>
-
-                <ng-template [ngIf]="i == 5">
-                  <td class="tableboldClass rightAlign">
-                    $
-                    {{
-                      (40 *
-                        financials[4]?.EBITDA *
-                        financials[6]?.DiscountFactor) /
-                        100 +
-                        financials[6]?.PresentFcf | number: '1.0-0'
-                    }}
                   </td>
                 </ng-template>
               </ng-template>
@@ -1065,22 +870,16 @@
 
   <mat-progress-bar mode="indeterminate" *ngIf="progressBar"></mat-progress-bar>
 
-  <div
-    fxLayout="row"
-    fxLayoutAlign="space-between center"
-    fxLayoutGap="20px"
-    id="myTable"
-    style="width: 650px"
-  >
+  <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="20px" id="myTable">
     <div fxFlex="100">
-      <mat-progress-bar
-        mode="indeterminate"
-        *ngIf="progressBar"
-      ></mat-progress-bar>
-      <div class="mat-elevation-z8" #valuationSummary>
-        <div>
-          <th
-            style="
+      <mat-progress-bar mode="indeterminate" *ngIf="progressBar"></mat-progress-bar>
+      <div class="mat-elevation-z8" #valuationSummary style="max-width: 75%;">
+        <!-- <div> -->
+          
+
+          <table class="table table-striped" style="max-width: 100%;">
+            <tr>
+              <th colspan="4" style="
               font-weight: bold;
               background-color: #164a5b;
               color: white;
@@ -1089,60 +888,30 @@
               border-top-left-radius: 5px;
               border-top-right-radius: 5px;
               width: 2000px;
-            "
-          >
+            ">
             Valuation Summary
           </th>
-
-          <table class="table table-striped">
+            </tr>
             <tr style="height: 35px">
-              <th
-                class="tableheaderClass leftAlign"
-                style="font-weight: normal"
-              >
+              <th class="tableheaderClass leftAlign" style="font-weight: normal; min-width: 390px;">
                 (in millions)
               </th>
 
-              <th
-                class="tableheaderClass rightAlign"
-                style="font-style: normal"
-              >
+              <th class="tableheaderClass rightAlign" style="font-style: normal">
                 Total
               </th>
 
-              <ng-template
-                ngFor
-                [ngForOf]="years"
-                let-year
-                let-rowIndex="index"
-              >
-                <ng-template
-                  [ngIf]="
-                    rowIndex != 2 &&
-                    rowIndex != 3 &&
-                    rowIndex != 4 &&
-                    rowIndex != 6
-                  "
-                >
-                  <ng-template
-                    [ngIf]="rowIndex <= years.length - 3"
-                    [ngIfElse]="actualYear"
-                  >
-                    <th
-                      class="tableheaderYearClass rightAlign"
-                      [class.borderRadius]="rowIndex == years.length - 1"
-                    >
-                      <ng-template
-                        [ngIf]="year.indexOf('-') >= 0"
-                        [ngIfElse]="actualYear"
-                      >
+              <ng-template ngFor [ngForOf]="years" let-year let-rowIndex="index">
+                <ng-template [ngIf]="
+                    rowIndex < 2
+                  ">
+                  <ng-template [ngIf]="rowIndex <= years.length - 3" [ngIfElse]="actualYear">
+                    <th class="tableheaderYearClass rightAlign" [class.borderRadius]="rowIndex == years.length - 1">
+                      <ng-template [ngIf]="year.indexOf('-') >= 0" [ngIfElse]="actualYear">
                         Total
                       </ng-template>
                       <ng-template #actualYear>
-                        {{ year }}E EBITDA <br /><span
-                          style="padding-right: 25px"
-                          >Multi.</span
-                        >
+                        {{ year }}E EBITDA Multi.
                       </ng-template>
                     </th>
                   </ng-template>
@@ -1153,16 +922,18 @@
             <tr>
               <td class="normalClass leftAlign">Present Value of FCFs</td>
               <td class="normalClass rightAlign">
-                $
-                {{
-                  financials[0]?.PresentFcf +
-                    financials[1]?.PresentFcf +
-                    financials[2]?.PresentFcf +
-                    financials[3]?.PresentFcf +
-                    financials[4]?.PresentFcf | number: '1.0-0'
-                }}
+                <ng-template [ngIf]="financials[5]?.PresentFcf >= 0">
+                  $ {{ financials[5]?.PresentFcf | number: '1.0-0' }}
+                </ng-template>
+                <ng-template [ngIf]="financials[5]?.PresentFcf < 0">
+                  ($ {{ -financials[5]?.PresentFcf | number: '1.0-0' }})
+                </ng-template>
               </td>
-              <ng-template ngFor [ngForOf]="financials" let-rev let-i="index">
+
+              <td></td>
+              <td></td>
+
+              <!-- <ng-template ngFor [ngForOf]="financials" let-rev let-i="index">
                 <td class="normalClass rightAlign" *ngIf="i == 1 || i == 2">
                   <ng-template [ngIf]="i == 5">
                     <ng-template [ngIf]="rev['PresentFcf'] >= 0">
@@ -1173,7 +944,7 @@
                     </ng-template>
                   </ng-template>
                 </td>
-              </ng-template>
+              </ng-template> -->
             </tr>
 
             <tr>
@@ -1181,116 +952,82 @@
                 Present Value of Terminal Value
               </td>
               <td class="normalClass rightAlign">
-                $
-                {{
-                  (financials[4]?.EBITDA * 40 * financials[6]?.DiscountFactor) /
-                    100 | number: '1.0-0'
-                }}
+                <ng-template [ngIf]="financials[5]?.PresentTerminalValue >= 0">
+                  $ {{ financials[5]?.PresentTerminalValue | number: '1.0-0' }}
+                </ng-template>
+                <ng-template [ngIf]="financials[5]?.PresentTerminalValue < 0">
+                  ($ {{ -financials[5]?.PresentTerminalValue | number: '1.0-0' }})
+                </ng-template>
               </td>
-              <ng-template ngFor [ngForOf]="financials" let-rev let-i="index">
+
+              <td></td>
+              <td></td>
+
+              <!-- <ng-template ngFor [ngForOf]="financials" let-rev let-i="index">
                 <td class="normalClass rightAlign" *ngIf="i == 1 || i == 2">
                   <ng-template [ngIf]="i == 5">
-                    <ng-template
-                      [ngIf]="
-                        (financials[4].EBITDA *
-                          40 *
-                          financials[6].DiscountFactor) /
-                          100 >=
-                        0
-                      "
-                    >
+                    <ng-template [ngIf]="financials[5]?.PresentTerminalValue | number: '1.0-0'">
                       $
                       {{
-                        (financials[4]?.EBITDA *
-                          40 *
-                          financials[6]?.DiscountFactor) /
-                          100 | number: '1.0-0'
+                      <ng-template [ngIf]="financials[5]?.PresentTerminalValue | number: '1.0-0'">
                       }}
                     </ng-template>
-                    <ng-template
-                      [ngIf]="
+                    <ng-template [ngIf]="
                         (financials[4].EBITDA *
                           40 *
                           financials[6].DiscountFactor) /
                           100 <
                         0
-                      "
-                    >
+                      ">
                       ($
                       {{
-                        -(
-                          (financials[4]?.EBITDA *
-                            40 *
-                            financials[6]?.DiscountFactor) /
-                          100
-                        ) | number: '1.0-0'
+                      -(
+                      (financials[4]?.EBITDA *
+                      40 *
+                      financials[6]?.DiscountFactor) /
+                      100
+                      ) | number: '1.0-0'
                       }})
                     </ng-template>
                   </ng-template>
                 </td>
-              </ng-template>
-              <!-- <td class="tableboldClass rightAlign" *ngFor="let rev of financials">
-                              <ng-template [ngIf]="rev['PresentTerminalValue'] >= 0">
-                                  $ {{ rev['PresentTerminalValue'] | number: '1.0-0'}}
-                              </ng-template>
-                              <ng-template [ngIf]="rev['PresentTerminalValue'] < 0">
-                                  ($ {{ -(rev['PresentTerminalValue']) | number: '1.0-0'}})
-                              </ng-template>
-                          </td> -->
+              </ng-template> -->
+              
             </tr>
 
             <tr>
               <td class="tableboldClass">Total Enterprise Value</td>
               <td class="tableboldClass rightAlign">
-                $
-                {{
-                  financials[0]?.PresentFcf +
-                    financials[1]?.PresentFcf +
-                    financials[2]?.PresentFcf +
-                    financials[3]?.PresentFcf +
-                    financials[4]?.PresentFcf +
-                    (financials[4]?.EBITDA *
-                      40 *
-                      financials[6]?.DiscountFactor) /
-                      100 | number: '1.0-0'
-                }}
+                <ng-template [ngIf]="financials[0]?.totalEnterpriseValue >= 0">
+                  $ {{ financials[0]?.totalEnterpriseValue | number: '1.0-0' }}
+                </ng-template>
+                <ng-template [ngIf]="financials[0]?.totalEnterpriseValue < 0">
+                  ($ {{ -financials[0]?.totalEnterpriseValue | number: '1.0-0' }})
+                </ng-template>
               </td>
-              <ng-template ngFor [ngForOf]="financials" let-rev let-i="index">
-                <ng-template
-                  [ngIf]="i != 2 && i != 3 && i != 4 && i != 5 && i != 6"
-                >
+              <!-- <ng-template ngFor [ngForOf]="financials" let-rev let-i="index">
+                <ng-template [ngIf]="i != 2 && i != 3 && i != 4 && i != 5 && i != 6">
                   <td class="tableboldClass rightAlign">
                     <ng-template [ngIf]="i == 0">
-                      <ng-template
-                        [ngIf]="
-                          (financials[0].PresentFcf +
-                            financials[1].PresentFcf +
-                            financials[2].PresentFcf +
-                            financials[3].PresentFcf +
-                            financials[4].PresentFcf +
+                      <ng-template [ngIf]="
+                          (financials[5].PresentFcf +
                             (financials[4].EBITDA *
                               40 *
                               financials[6].DiscountFactor) /
                               100) /
                             financials[0].EBITDA >=
                           0
-                        "
-                      >
+                        ">
                         {{
-                          (financials[0].PresentFcf +
-                            financials[1].PresentFcf +
-                            financials[2].PresentFcf +
-                            financials[3].PresentFcf +
-                            financials[4].PresentFcf +
-                            (financials[4].EBITDA *
-                              40 *
-                              financials[6].DiscountFactor) /
-                              100) /
-                            financials[0].EBITDA | number: '1.0-0'
+                        (financials[5].PresentFcf +
+                        (financials[4].EBITDA *
+                        40 *
+                        financials[6].DiscountFactor) /
+                        100) /
+                        financials[0].EBITDA | number: '1.0-0'
                         }}x
                       </ng-template>
-                      <ng-template
-                        [ngIf]="
+                      <ng-template [ngIf]="
                           financials[0].PresentFcf +
                             financials[1].PresentFcf +
                             financials[2].PresentFcf +
@@ -1302,113 +1039,96 @@
                               100 /
                               financials[0].EBITDA <
                           0
-                        "
-                      >
+                        ">
                         (
                         {{
-                          -(
-                            financials[0].PresentFcf +
-                            financials[1].PresentFcf +
-                            financials[2].PresentFcf +
-                            financials[3].PresentFcf +
-                            financials[4].PresentFcf +
-                            (financials[4].EBITDA *
-                              40 *
-                              financials[6].DiscountFactor) /
-                              100 /
-                              financials[0].EBITDA
-                          ) | number: '1.0-0'
+                        -(
+                        financials[5].PresentFcf +
+                        (financials[4].EBITDA *
+                        40 *
+                        financials[6].DiscountFactor) /
+                        100 /
+                        financials[0].EBITDA
+                        ) | number: '1.0-0'
                         }}x)
                       </ng-template>
                     </ng-template>
                     <ng-template [ngIf]="i == 1">
-                      <ng-template
-                        [ngIf]="
-                          (financials[0].PresentFcf +
-                            financials[1].PresentFcf +
-                            financials[2].PresentFcf +
-                            financials[3].PresentFcf +
-                            financials[4].PresentFcf +
+                      <ng-template [ngIf]="
+                          (financials[5].PresentFcf +
+                            
                             (financials[4].EBITDA *
                               40 *
                               financials[6].DiscountFactor) /
                               100) /
                             financials[1].EBITDA >=
                           0
-                        "
-                      >
+                        ">
                         {{
-                          (financials[0].PresentFcf +
-                            financials[1].PresentFcf +
-                            financials[2].PresentFcf +
-                            financials[3].PresentFcf +
-                            financials[4].PresentFcf +
-                            (financials[4].EBITDA *
-                              40 *
-                              financials[6].DiscountFactor) /
-                              100) /
-                            financials[1].EBITDA | number: '1.0-0'
+                        (financials[5].PresentFcf +
+                        
+                        (financials[4].EBITDA *
+                        40 *
+                        financials[6].DiscountFactor) /
+                        100) /
+                        financials[1].EBITDA | number: '1.0-0'
                         }}x
                       </ng-template>
-                      <ng-template
-                        [ngIf]="
-                          financials[0].PresentFcf +
-                            financials[1].PresentFcf +
-                            financials[2].PresentFcf +
-                            financials[3].PresentFcf +
-                            financials[4].PresentFcf +
+                      <ng-template [ngIf]="
+                          financials[5].PresentFcf +
+                            
                             (financials[4].EBITDA *
                               40 *
                               financials[6].DiscountFactor) /
                               financials[1].EBITDA <
                           0
-                        "
-                      >
+                        ">
                         (
                         {{
-                          -(
-                            financials[0].PresentFcf +
-                            financials[1].PresentFcf +
-                            financials[2].PresentFcf +
-                            financials[3].PresentFcf +
-                            financials[4].PresentFcf +
-                            (financials[4].EBITDA *
-                              40 *
-                              financials[6].DiscountFactor) /
-                              financials[1].EBITDA /
-                              100
-                          ) | number: '1.0-0'
+                        -(
+                        financials[5].PresentFcf +
+                        
+                        (financials[4].EBITDA *
+                        40 *
+                        financials[6].DiscountFactor) /
+                        financials[1].EBITDA /
+                        100
+                        ) | number: '1.0-0'
                         }}x)
                       </ng-template>
                     </ng-template>
                   </td>
                 </ng-template>
-              </ng-template>
-              <!-- <td class="normalClass rightAlign" *ngFor="let rev of financials">
-                              <ng-template [ngIf]="rev['Total'] >= 0">
-                                  $ {{ rev['Total'] | number: '1.0-0'}}
-                              </ng-template>
-                              <ng-template [ngIf]="rev['Total'] < 0">
-                                  ($ {{ -(rev['Total']) | number: '1.0-0'}})
-                              </ng-template>
-                          </td> -->
+              </ng-template> -->
+              <td class="tableboldClass rightAlign">
+                <ng-template [ngIf]="financials[0]?.fpyebitdaexitmultiple >= 0">
+                  {{ financials[0]?.fpyebitdaexitmultiple | number: '1.0-0' }}x
+                </ng-template>
+                <ng-template [ngIf]="financials[0]?.fpyebitdaexitmultiple < 0">
+                  ({{ -financials[0]?.fpyebitdaexitmultiple | number: '1.0-0' }}x)
+                </ng-template>
+              </td>
+              <td class="tableboldClass rightAlign">
+                <ng-template [ngIf]="financials[1]?.spyebitdaexitmultiple >= 0">
+                  {{ financials[1]?.spyebitdaexitmultiple | number: '1.0-0' }}x
+                </ng-template>
+                <ng-template [ngIf]="financials[1]?.spyebitdaexitmultiple < 0">
+                  ({{ -financials[1]?.spyebitdaexitmultiple | number: '1.0-0' }}x)
+                </ng-template>
+              </td>
             </tr>
 
             <tr>
               <td class="normalClass">(–) Current Net Debt</td>
               <td class="normalClass rightAlign">
-                <ng-template
-                  [ngIf]="financials[5] && financials[5]?.current >= 0"
-                >
+                <ng-template [ngIf]="financials[5] && financials[5]?.current >= 0">
                   $ {{ financials[5].current | number: '1.0-0' }}
                 </ng-template>
-                <ng-template
-                  [ngIf]="financials[5] && financials[5]?.current < 0"
-                >
+                <ng-template [ngIf]="financials[5] && financials[5]?.current < 0">
                   (${{ -financials[5].current | number: '1.0-0' }})
                 </ng-template>
               </td>
-              <ng-template ngFor [ngForOf]="financials" let-rev let-i="index">
+              <!-- <ng-template ngFor [ngForOf]="financials" let-rev let-i="index">
                 <td class="normalClass rightAlign" *ngIf="i == 1 || i == 2">
                   <ng-template [ngIf]="i == 5">
                     <ng-template [ngIf]="rev['current'] >= 0">
@@ -1419,82 +1139,25 @@
                     </ng-template>
                   </ng-template>
                 </td>
-              </ng-template>
+              </ng-template> -->
 
-              <!-- <td class="normalClass rightAlign" *ngFor="let rev of financials">
-                              <ng-template [ngIf]="rev['Total'] >= 0">
-                                  $ {{ rev['Total'] | number: '1.0-0'}}
-                              </ng-template>
-                              <ng-template [ngIf]="rev['Total'] < 0">
-                                  ($ {{ -(rev['Total']) | number: '1.0-0'}})
-                              </ng-template>
-                          </td> -->
+              <td></td>
+              <td></td>
             </tr>
 
             <tr>
               <td class="tableboldClass">Equity Value</td>
               <td class="normalClass rightAlign">
-                <ng-template
-                  [ngIf]="
-                    (financials[0]?.PresentFcf +
-                      financials[1]?.PresentFcf +
-                      financials[2]?.PresentFcf +
-                      financials[3]?.PresentFcf +
-                      financials[4]?.PresentFcf +
-                      financials[4]?.EBITDA *
-                        40 *
-                        financials[6]?.DiscountFactor +
-                      financials[5]?.current) /
-                      100 >=
-                    0
-                  "
-                >
-                  $
-                  {{
-                    (financials[0]?.PresentFcf +
-                      financials[1]?.PresentFcf +
-                      financials[2]?.PresentFcf +
-                      financials[3]?.PresentFcf +
-                      financials[4]?.PresentFcf +
-                      financials[4]?.EBITDA *
-                        40 *
-                        financials[6]?.DiscountFactor +
-                      financials[5]?.current) /
-                      100 | number: '1.0-0'
-                  }}
+                <ng-template [ngIf]="financials[0] && financials[0]?.equity >= 0">
+                  $ {{ financials[0]?.equity | number: '1.0-0' }}
                 </ng-template>
-                <ng-template
-                  [ngIf]="
-                    (financials[0]?.PresentFcf +
-                      financials[1]?.PresentFcf +
-                      financials[2]?.PresentFcf +
-                      financials[3]?.PresentFcf +
-                      financials[4]?.PresentFcf +
-                      financials[4]?.EBITDA *
-                        40 *
-                        financials[6]?.DiscountFactor +
-                      financials[5]?.current) /
-                      100 <
-                    0
-                  "
-                >
-                  ($
-                  {{
-                    -(
-                      financials[0]?.PresentFcf +
-                      financials[1]?.PresentFcf +
-                      financials[2]?.PresentFcf +
-                      financials[3]?.PresentFcf +
-                      financials[4]?.PresentFcf +
-                      financials[4]?.EBITDA *
-                        40 *
-                        financials[6]?.DiscountFactor +
-                      financials[5]?.current
-                    ) / 100 | number: '1.0-0'
-                  }})
+                <ng-template [ngIf]="financials[0] && financials[0]?.equity < 0">
+                  (${{ -financials[0]?.equity | number: '1.0-0' }})
                 </ng-template>
               </td>
-              <ng-template ngFor [ngForOf]="financials" let-rev let-i="index">
+              <td></td>
+              <td></td>
+              <!-- <ng-template ngFor [ngForOf]="financials" let-rev let-i="index">
                 <td class="tableboldClass rightAlign" *ngIf="i == 1 || i == 2">
                   <ng-template [ngIf]="i == 5">
                     <ng-template [ngIf]="rev['equity'] >= 0">
@@ -1505,27 +1168,27 @@
                     </ng-template>
                   </ng-template>
                 </td>
-              </ng-template>
+              </ng-template> -->
             </tr>
           </table>
-        </div>
+        <!-- </div> -->
       </div>
     </div>
   </div>
 </ng-template>
 
-<ng-template [ngIf] = "!authService.authServiceLoaded || !valuationsLoaded">
-    <div id="loader-container">
-        <div id="loader"></div>
-        <div>
-          Loading Valuations&nbsp;.&nbsp;.&nbsp;.
-        </div>
+<ng-template [ngIf]="!authService.authServiceLoaded || !valuationsLoaded">
+  <div id="loader-container">
+    <div id="loader"></div>
+    <div>
+      Loading Valuations&nbsp;.&nbsp;.&nbsp;.
     </div>
+  </div>
 </ng-template>
 
 <ng-template #wacc let-editWACC>
   <div class="modal-header">
-    <h4 class="modal-title">WACC</h4>
+    <h4 class="modal-title">{{ editPopUp.label }}</h4>
     <!-- <button type="submit" class="close" aria-label="Close" (click)="editWACC.dismiss('Cross click')">
         <span aria-hidden="true">&times;</span>
       </button> -->
@@ -1533,35 +1196,19 @@
   <div class="modal-body">
     <mat-form-field class="row container-field">
       <!-- <mat-label>Email</mat-label> -->
-      <input
-        type="number"
-        matInput
-        [ngModel]="getWaccValue(financialObj.get(years[5]).wacc)"
-        (ngModelChange)="assignValueToDCFAssumptions($event)"
-        name="wacc"
-        placeholder="WACC"
-      />
+      <input type="number" matInput [(ngModel)]="editPopUp.value" (input) = "getValue($event)" name="wacc" [placeholder]="editPopUp.label" />
       <mat-icon matSuffix> % </mat-icon>
     </mat-form-field>
     <div class="row">
       <div class="col"></div>
       <div class="col-3" style="padding: 0; text-align: right">
-        <button
-          class="save"
-          mat-raised-button
-          [disabled]="!financialObj.get(years[5]).wacc"
-          (click)="saveScenario(); editWACC.close('Close click')"
-        >
-          Save
+        <button class="save" mat-raised-button
+          (click)="assignValues(); editWACC.close('Close click')">
+          Ok
         </button>
       </div>
       <div class="col-3" style="padding: 0">
-        <button
-          class="cancel"
-          mat-raised-button
-          (click)="editWACC.close('Close click')"
-          ngbAutofocus
-        >
+        <button class="cancel" mat-raised-button (click)="editWACC.close('Close click')" ngbAutofocus>
           Cancel
         </button>
       </div>

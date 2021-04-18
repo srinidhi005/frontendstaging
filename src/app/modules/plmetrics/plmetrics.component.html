@@ -45,7 +45,7 @@
       <mat-icon style="font-size: 26px">picture_as_pdf</mat-icon>
     </button>
     <button mat-button [matMenuTriggerFor]="below" style="font-size: 18px">
-      Scenario<mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+      {{ scenarioName }}<mat-icon matSuffix>keyboard_arrow_down</mat-icon>
     </button>
     <mat-menu #below="matMenu" yPosition="below">
       <button
@@ -318,19 +318,21 @@
           </td>
         </tr>
 
-        <tr>
+		<tr>
           <td class="normalClass leftAlign">
-            (+/-) Net Interest Income / (Expense) & Other Income (Expense)
+            (+/-) Other Income / (Expense)
           </td>
           <td class="normalClass rightAlign" *ngFor="let rev of financials">
-            <ng-template [ngIf]="rev['netIterestExpense'] >= 0">
-              $ {{ rev['netIterestExpense'] | number: '1.0-0' }}
+            <ng-template [ngIf]="rev['otherIncome'] >= 0">
+              $ {{ rev['otherIncome'] | number: '1.0-0' }}
             </ng-template>
-            <ng-template [ngIf]="rev['netIterestExpense'] < 0">
-              ($ {{ -rev['netIterestExpense'] | number: '1.0-0' }})
+            <ng-template [ngIf]="rev['otherIncome'] < 0">
+              ($ {{ -rev['otherIncome'] | number: '1.0-0' }})
             </ng-template>
           </td>
         </tr>
+		
+		
 
         <tr>
           <td class="tableboldClass leftAlign">EBT</td>

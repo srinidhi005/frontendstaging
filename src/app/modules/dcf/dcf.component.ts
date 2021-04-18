@@ -57,6 +57,9 @@ export class DcfComponent implements OnInit {
   //scenario = this.UserDetailModelService.getSelectedScenario();
   companyName = this.UserDetailModelService.getSelectedCompany();
   financialObj = new Map();
+
+  corpTaxRate = 21;
+  exitMutiple = 40;
   inprogress = true;
   progressBar: boolean;
   years = [];
@@ -92,6 +95,12 @@ export class DcfComponent implements OnInit {
   loadedScenario = 'Scenario 0';
   waacEditedValue: any;
   dcf;
+
+  editPopUp = {
+    key: "",
+    value: 0,
+    label: ""
+  }
 
   valuationsLoaded = false;
 
@@ -189,18 +198,27 @@ export class DcfComponent implements OnInit {
             current: res[j].currentnetdebt,
             equity: res[j].equityvalue,
 
-            Totla: res[j].totalenterprisevalue,
+            totalEnterpriseValue: res[j].totalenterprisevalue,
 
-            afterTaxCostOfDebt: res[j].after_tax_debt_cost,
-            costOfDebt: res[j].cost_of_debt,
-            costOfEquity: res[j].cost_of_equity,
-            debtEquity: res[j].debt_equity,
-            debtToTotalCapitalization: res[j].debt_to_total_cap,
-            equityRiskPremium: res[j].equity_risk_premium,
-            equityToTotalCapitalization: res[j].equity_to_total_cap,
-            leveredBeta: res[j].levered_beta,
-            riskFreeRate: res[j].risk_free_rate,
-            taxRate: res[j].tax_rate,
+            // afterTaxCostOfDebt: res[j].after_tax_debt_cost,
+            costOfDebt: res[j].costofdebt,
+            costOfEquity: res[j].costofequity,
+            debtEquity: res[j].debequity,
+
+            debtToTotalCap: res[j].debttotalcap,
+            ebitdaExitMultiple: res[j].ebitdaexitmultiple,
+            equityToTotalCap: res[j].equitytotalcap,
+            leveredBeta: res[j].leveredbeta,
+            afterTaxCostOfDebt: res[j].aftertaxcostdebt,
+            equityRiskPremium: res[j].equityriskpremium,
+            riskFreeRate: res[j].riskfreerate,
+            taxRate: res[j].taxrate,
+
+            // costOfEquity: res[j].cost_of_equity,
+            // debtEquity: res[j].debt_equity,
+            // debtToTotalCapitalization: res[j].debt_to_total_cap,
+            // equityToTotalCapitalization: res[j].equity_to_total_cap,
+            // leveredBeta: res[j].levered_beta,
             wacc: res[j].wacc,
             DiscountFactor:
               (1 / (1 + res[j].wacc / 100) ** res[j].period) * 100,
@@ -250,29 +268,42 @@ export class DcfComponent implements OnInit {
                     UnleveredFreeCashFlow: res[j].unleveredfreecash,
                     Period: res[j].period,
                     //Total: res[j].valuationtotal,
-                    Totla: res[j].totalenterprisevalue,
-                    afterTaxCostOfDebt: res[j].after_tax_debt_cost,
-                    costOfDebt: res[j].cost_of_debt,
-                    costOfEquity: res[j].cost_of_equity,
-                    debtEquity: res[j].debt_equity,
-                    debtToTotalCapitalization: res[j].debt_to_total_cap,
-                    equityRiskPremium: res[j].equity_risk_premium,
-                    equityToTotalCapitalization: res[j].equity_to_total_cap,
-                    leveredBeta: res[j].levered_beta,
-                    riskFreeRate: res[j].risk_free_rate,
-                    taxRate: res[j].tax_rate,
+                    totalEnterpriseValue: res[j].totalenterprisevalue,
+
+                    costOfDebt: res[j].costofdebt,
+                    costOfEquity: res[j].costofequity,
+                    debtEquity: res[j].debequity,
+
+                    debtToTotalCap: res[j].debttotalcap,
+                    ebitdaExitMultiple: res[j].ebitdaexitmultiple,
+                    equityToTotalCap: res[j].equitytotalcap,
+                    leveredBeta: res[j].leveredbeta,
+                    afterTaxCostOfDebt: res[j].aftertaxcostdebt,
+                    equityRiskPremium: res[j].equityriskpremium,
+                    riskFreeRate: res[j].riskfreerate,
+                    taxRate: res[j].taxrate,
+                    // afterTaxCostOfDebt: res[j].after_tax_debt_cost,
+                    // costOfDebt: res[j].cost_of_debt,
+                    // costOfEquity: res[j].cost_of_equity,
+                    // debtEquity: res[j].debt_equity,
+                    // debtToTotalCapitalization: res[j].debt_to_total_cap,
+                    // equityRiskPremium: res[j].equity_risk_premium,
+                    // equityToTotalCapitalization: res[j].equity_to_total_cap,
+                    // leveredBeta: res[j].levered_beta,
+                    // riskFreeRate: res[j].risk_free_rate,
+                    // taxRate: res[j].tax_rate,
                     wacc: res[j].wacc,
-                    DiscountFactor:
-                      (1 / (1 + res[j].wacc / 100) ** res[j].period) * 100,
+                    DiscountFactor: res[j].discountfactor,
+                      // (1 / (1 + res[j].wacc / 100) ** res[j].period) * 100,
                     current: res[j].currentnetdebt,
-                    PresentFcf:
-                      res[j].unleveredfreecash *
-                      (1 / (1 + res[j].wacc / 100) ** res[j].period),
+                    PresentFcf:res[j].presentfcf,
+                      // res[j].unleveredfreecash *
+                      // (1 / (1 + res[j].wacc / 100) ** res[j].period),
                     PresentTerminalValue: res[j].presentterminalvalue,
-                    Total:
-                      res[j].unleveredfreecash *
-                        (1 / (1 + res[j].wacc / 100) ** res[j].period) +
-                      res[j].presentterminalvalue,
+                    Total: res[j].valuationtotal,
+                      // res[j].unleveredfreecash *
+                      //   (1 / (1 + res[j].wacc / 100) ** res[j].period) +
+                      // res[j].presentterminalvalue,
                     equity: res[j].equityvalue,
                     fpyebitdaexitmultiple: res[j].fpyebitdaexitmultiple,
                     spyebitdaexitmultiple: res[j].spyebitdaexitmultiple,
@@ -377,11 +408,15 @@ export class DcfComponent implements OnInit {
                 console.log('years', this.years);
                 this.financials = Object.values(obj);
                 console.log('financials', this.financials);
+                this.initCalculation();
                 this.valuationsLoaded = true;
+
               }); //end of projections
           }, error => {
             this.valuationsLoaded = true;
-          }); //end of Save Scenarios
+          }); 
+          
+          //end of Save Scenarios
       }, error => {
         this.valuationsLoaded = true;
       }); //end of actuals
@@ -395,6 +430,32 @@ export class DcfComponent implements OnInit {
       }
       return output;
     }
+  }
+
+  getTotalForPresentValue(){
+    return this.financials[0]?.PresentFcf + this.financials[1]?.PresentFcf + this.financials[2]?.PresentFcf + this.financials[3]?.PresentFcf + this.financials[4]?.PresentFcf
+  }
+
+  getTotal(){
+    return (40 * this.financials[4]?.EBITDA * this.financials[6]?.DiscountFactor) /
+                100 +
+                this.financials[0]?.PresentFcf +
+                this.financials[1]?.PresentFcf +
+                this.financials[2]?.PresentFcf +
+                this.financials[3]?.PresentFcf +
+                this.financials[4]?.PresentFcf
+  }
+
+  vkjsda(){
+
+  }
+
+  getTerminalTotal(){
+    return  (40 *
+      this.financials[4]?.EBITDA *
+      this.financials[6]?.DiscountFactor) /
+      100 +
+      this.financials[6]?.PresentFcf
   }
 
   saveScenario() {
@@ -411,16 +472,33 @@ export class DcfComponent implements OnInit {
         this.loadedScenario = ('Scenario ' + this.scenarioSelected) as any;
         console.log('finals', this.financialObj);
         const inputArray = [];
+
+        console.log(this.financialObj.get(this.years[0]))
+
         for (const [key, value] of this.financialObj) {
           const inputObj: any = {};
 
           inputObj.companyname = this.companySelected;
           inputObj.asof = key.toString();
-          inputObj.wacc = this.financialObj.get(key).wacc;
+          // inputObj.wacc = this.financialObj.get(key).wacc;
           inputObj.period = this.financialObj.get(key).Period;
-          //inputObj.scenario = this.saveScenarioNumber;
+          // inputObj.scenario = this.saveScenarioNumber;
           inputObj.ebitda = this.financialObj.get(key).EBITDA;
-          inputObj.scenario = this.scenario;
+          inputObj.scenario = this.scenarioSelected;
+
+          inputObj.costofdebt = this.financialObj.get(this.years[0]).costOfDebt;
+          inputObj.costofequity = this.financialObj.get(this.years[0]).costOfEquity;
+          inputObj.debequity = this.financialObj.get(this.years[0]).debtEquity;
+          inputObj.debttotalcap = this.financialObj.get(this.years[0]).debtToTotalCap;
+          inputObj.equitytotalcap = this.financialObj.get(this.years[0]).equityToTotalCap;
+          inputObj.ebitdaexitmultiple = this.financialObj.get(this.years[0]).ebitdaExitMultiple;
+          inputObj.leveredbeta = this.financialObj.get(this.years[0]).leveredBeta;
+          inputObj.aftertaxcostdebt = this.financialObj.get(this.years[0]).afterTaxCostOfDebt;
+          inputObj.equityriskpremium = this.financialObj.get(this.years[0]).equityRiskPremium;
+          inputObj.riskfreerate = this.financialObj.get(this.years[0]).riskFreeRate;
+          inputObj.taxrate = this.financialObj.get(this.years[0]).taxRate;
+          inputObj.wacc = this.financialObj.get(this.years[0]).wacc;
+
           (inputObj.da = this.financialObj.get(key).DepreciationAmortization),
             (inputObj.ebit = this.financialObj.get(key).EBIT),
             (inputObj.netinterest = this.financialObj.get(
@@ -449,8 +527,8 @@ export class DcfComponent implements OnInit {
             ).PresentTerminalValue),
             (inputObj.valuationtotal = this.financialObj.get(key).Total),
             (inputObj.currentnetdebt = this.financialObj.get(key).current),
-            (inputObj.equityvalue = this.financialObj.get(key).equity),
-            (inputObj.totalenterprisevalue = this.financialObj.get(key).Totla),
+            (inputObj.equityvalue = this.financialObj.get(this.years[0]).equity),
+            (inputObj.totalenterprisevalue = this.financialObj.get(this.years[0]).totalEnterpriseValue),
             (inputObj.DiscountFactor =
               (1 / (1 + inputObj.wacc / 100) ** inputObj.Period) * 100);
           //inputObj.DiscountFactor = this.financialObj.get(key).DiscountFactor;
@@ -489,7 +567,7 @@ export class DcfComponent implements OnInit {
               );
             }
           });
-        this.initScenario(this.scenarioSelected);
+        // this.initScenario(this.scenarioSelected);
       });
   }
 
@@ -513,20 +591,203 @@ export class DcfComponent implements OnInit {
     }
   }
 
-  openPopUpModal(content) {
+  openPopUpModal(content, key, label) {
+
+    this.editPopUp = {
+      key: key,
+      label: label,
+      value: this.financialObj && this.financialObj.get(this.years[0]) && this.financialObj.get(this.years[0])[key] ? this.financialObj.get(this.years[0])[key] : 0
+    }
+    
     this.modalService.open(content, { centered: true });
   }
+
+  getValue(event){
+    let value = 0;
+    console.log(event)
+    value = this.financialObj && this.financialObj[5] && this.financialObj[5][this.editPopUp.key] ? +this.financialObj[5][this.editPopUp.key] : 0;
+
+    return (+value).toFixed(2);
+  }
+
+  assignValues(){
+    this.financialObj.get(this.years[0])[this.editPopUp.key] = this.editPopUp.value;
+
+    this.initCalculation()
+  }
+
+  initCalculation(){
+    // const keys = this.financialObj.keys();
+
+
+    // WACC Calculation
+    this.calculateDebtToEquity()
+
+    this.calculateLeveredBeta();
+
+    this.calculateCostOfEquity();
+
+    this.calculateAfterTaxCostOfDebt();
+
+    this.calculateWacc();
+    // WACC Calculation
+
+
+    //Valutions Calculation
+    this.calculateDiscountFactor();
+
+    this.calculatePresentValueFCF();
+
+    this.calculateTotalPresentValueFCF()
+
+    this.calculatePresentValueOfTerminalValue()
+
+    this.calculateTotalPresentValueOfTerminalValue()
+
+    this.calculateTotal()
+
+    this.calculateEnterpriseValue();
+
+    this.calculateEquityValue();
+
+    this.calculateFYProjEbitdaMultiple();
+
+    this.calculateSYProjEbitdaMultiple();
+
+    //Valutions Calculation
+
+
+    const obj = {};
+    
+    this.financialObj.forEach((value, key) => {
+      obj[key] = value;
+    });
+
+    this.years = Object.keys(obj);
+    console.log('years', this.years);
+    this.financials = Object.values(obj);
+
+    console.log("After Calc", this.financials)
+  }
+
+  calculateDiscountFactor(){
+    for (const [key, value] of this.financialObj){
+      if(key.indexOf("-") == -1 && key != "terminal"){
+        const operand1 = (1 + (this.financialObj.get(key).wacc/100)) ** this.financialObj.get(key).Period
+        this.financialObj.get(key).DiscountFactor = (1/operand1) * 100;
+      }
+    }
+  }
+
+  calculatePresentValueFCF(){
+    this.years.forEach( fy => {
+      if(fy.indexOf("-") == -1 && fy != "terminal"){
+        this.financialObj.get(fy).PresentFcf = (this.financialObj.get(fy).DiscountFactor/100) * this.financialObj.get(fy).UnleveredFreeCashFlow
+      }
+    })
+  }
+
+  calculatePresentValueOfTerminalValue(){
+    const totalYear = this.years.find( fy => fy.indexOf("-") >= 0)
+    let lastPY = ""
+    if(totalYear){
+      lastPY = totalYear.split("-")[1];
+    }
+    this.financialObj.get("terminal").PresentTerminalValue = this.financialObj.get(this.years[0]).ebitdaExitMultiple * this.financialObj.get(lastPY).EBITDA * (this.financialObj.get("terminal").DiscountFactor/100)
+  }
+
+  calculateTotalPresentValueFCF(){
+    const totalYear = this.years.find( fy => fy.indexOf("-") >= 0)
+
+    if(totalYear){
+      this.years.forEach( fy => {
+        if(fy != totalYear){
+          this.financialObj.get(totalYear).PresentFcf += this.financialObj.get(fy).PresentFcf
+        }
+      })
+    }
+  }
+
+  calculateTotalPresentValueOfTerminalValue(){
+    const totalYear = this.years.find( fy => fy.indexOf("-") >= 0)
+    
+    if(totalYear){
+      this.years.forEach( fy => {
+        if(fy != totalYear){
+          this.financialObj.get(totalYear).PresentTerminalValue += this.financialObj.get(fy).PresentTerminalValue
+        }
+      })
+    }
+  }
+
+  calculateTotal(){
+    this.years.forEach( fy => {
+      this.financialObj.get(fy).Total = this.financialObj.get(fy).PresentTerminalValue + this.financialObj.get(fy).PresentFcf
+    })
+  }
+
+  calculateEnterpriseValue(){
+    const totalYear = this.years.find( fy => fy.indexOf("-") >= 0)
+    if(totalYear){
+      this.financialObj.get(this.years[0]).totalEnterpriseValue = this.financialObj.get(totalYear).PresentTerminalValue + this.financialObj.get(totalYear).PresentFcf    
+
+    }
+  }
+
+  calculateEquityValue(){
+    const totalYear = this.years.find( fy => fy.indexOf("-") >= 0)
+    if(totalYear){
+      this.financialObj.get(this.years[0]).equity = this.financialObj.get(this.years[0]).totalEnterpriseValue + this.financialObj.get(totalYear).current    
+    }
+  }
+
+  calculateDebtToEquity(){
+    console.log(this.financialObj.get(this.years[0]))
+    this.financialObj.get(this.years[0]).equityToTotalCap =  100 - (this.financialObj.get(this.years[0]).debtToTotalCap ? this.financialObj.get(this.years[0]).debtToTotalCap : 0)
+    this.financialObj.get(this.years[0]).debtEquity = (+this.financialObj.get(this.years[0]).debtToTotalCap / this.financialObj.get(this.years[0]).equityToTotalCap) * 100;
+  }
+
+  calculateFYProjEbitdaMultiple(){
+    this.financialObj.get(this.years[0]).fpyebitdaexitmultiple = this.financialObj.get(this.years[0]).totalEnterpriseValue/this.financialObj.get(this.years[0]).EBITDA
+  }
+
+  calculateSYProjEbitdaMultiple(){
+    this.financialObj.get(this.years[1]).spyebitdaexitmultiple = this.financialObj.get(this.years[0]).totalEnterpriseValue/this.financialObj.get(this.years[1]).EBITDA
+  }
+
+  calculateLeveredBeta(){
+
+    const operand1 = this.dcf.median.unlevered_beta;
+    const operand2 = 1 - (this.financialObj.get(this.years[0]).taxRate/100)
+    const operand3 = this.financialObj.get(this.years[0]).debtEquity/100
+
+
+    this.financialObj.get(this.years[0]).leveredBeta = operand1 * (1 + operand2 * operand3)
+  }
+
+  calculateCostOfEquity(){
+    this.financialObj.get(this.years[0]).costOfEquity = this.financialObj.get(this.years[0]).riskFreeRate + +this.financialObj.get(this.years[0]).equityRiskPremium * +this.financialObj.get(this.years[0]).leveredBeta
+  }
+
+  calculateAfterTaxCostOfDebt(){
+    this.financialObj.get(this.years[0]).afterTaxCostOfDebt = ((this.financialObj.get(this.years[0]).costOfDebt/100) * (1 - (+this.financialObj.get(this.years[0]).taxRate/100))) * 100;
+  }
+
+  calculateWacc(){
+    this.financialObj.get(this.years[0]).wacc = (((+this.financialObj.get(this.years[0]).equityToTotalCap/100) * (+this.financialObj.get(this.years[0]).costOfEquity/100)) + ((+this.financialObj.get(this.years[0]).debtToTotalCap/100) * (this.financialObj.get(this.years[0]).afterTaxCostOfDebt/100))) * 100
+  }
+
 
   getWaccValue(value) {
     value = value;
     return value;
   }
 
-  assignValueToDCFAssumptions(event) {
+  assignValueToDCFAssumptions(event, key) {
     console.log('event', event);
     const editedValue = event;
     for (const [key, value] of this.financialObj) {
-      this.financialObj.get(key).wacc = editedValue;
+      this.financialObj.get(key).key = editedValue;
     }
   }
 

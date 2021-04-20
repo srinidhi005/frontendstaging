@@ -36,6 +36,9 @@ export class UrlConfigService {
  private benchmarkingActualsAPI = `${environment.APIHost}benchmarking-actuals?company=`;
    private benchmarkingProjectionsAPI = `${environment.APIHost}benchmarking-projections?company=`;
 private creditScoreCardAPI = `${environment.APIHost}financial-scorecard?company=`;
+private getLogoAPI = `${environment.APIHost}image?email=`;
+private sendLogoAPI = `${environment.APIHost}upload_image`;
+
 
 
 
@@ -44,6 +47,15 @@ private creditScoreCardAPI = `${environment.APIHost}financial-scorecard?company=
 	{
 	return this.getcompany;
 	}
+
+  GetLogoAPI(){
+    return this.getLogoAPI;
+  }
+
+  PostLogoAPI(){
+    return this.sendLogoAPI;
+  }
+
 	
 	getdeleteAPI()
 	{

@@ -48,6 +48,31 @@ export class RMIAPIsService {
       })
     );
   }
+
+  getLogo(url){
+    return this.http.get(url, { headers: this.uploadHeaders, responseType: 'blob' }).pipe(
+      catchError((err) => {
+        console.log("Handling error getData", err);
+        return throwError(err);
+      })
+    );
+  }
+
+  saveLogo(url, input: File, email){
+    const formData = new FormData();
+    formData.append('file', input);
+    formData.append('email', email);
+
+    // const headers = this.POSTheaders;
+    // headers.append('Content-Type', 'multipart/form-data');    
+    return this.http.post(url, formData, { headers: this.uploadHeaders }).pipe(
+      catchError((err) => {
+        console.log("Handling error getData", err);
+        return throwError(err);
+      })
+    );
+  }
+  
   uploadData(url: string, input: Object) {
     return this.http.post(url, input, { headers: this.uploadHeaders }).pipe(
       catchError((err) => {

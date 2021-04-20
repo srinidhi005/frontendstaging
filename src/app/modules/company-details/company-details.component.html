@@ -2,7 +2,41 @@
   <form [formGroup]="form" (ngSubmit)="submit()">
     <mat-card class="company-profile-section">
       <mat-card-content>
-        <h2 class="title">Organization Info</h2>
+        <div class="row">
+          <div class="col">
+            <h2 class="title">Organization Info</h2>
+          </div>
+
+          <div class="col-3" style="text-align: right;">
+            <div class="row text-muted" *ngIf = "!logo"  style="height: 100px; cursor: pointer; border: 1px solid white; border-radius: 15px; margin: 0 18%; 
+            display: flex; align-items: center; justify-content: center; background-color: grey;" 
+            (click)="clickOnFileInput(fileInput)">
+              <span class="material-icons" style="font-size: 50px; color: black;">
+                business
+              </span>
+            </div>
+
+            <div class="row text-muted" *ngIf = "logo" style="height: 100px; cursor: pointer; border: 1px solid white; border-radius: 15px; margin: 0 18%; 
+            display: flex; align-items: center; justify-content: center;" 
+            (click)="clickOnFileInput(fileInput)">
+              <img [src]="logo" height="100" width="160" style="cursor: pointer;  border-radius: 15px" alt="file.name">
+            </div>
+
+            <div class="row" style="display: flex; align-items: center; justify-content: center; margin: 10px 0;">
+              <span class="material-icons" style="cursor: pointer;" (click)="clickOnFileInput(fileInput)">
+                photo_camera
+              </span>
+            </div>
+                  
+            <!-- <button mat-raised-button (click)="clickOnFileInput(fileInput)">
+              Upload Logo
+            </button> -->
+          </div>
+        </div>
+        <div class="row">
+          
+          <input type="file" accept="image/*" style="display: none;" #fileInput (change)="pickFile($event)"/>
+        </div>
         <div fxLayout="row" class="header">
           <div fxLayout="row" fxFlex fxLayoutAlign="center">
             <mat-form-field class="container-field">

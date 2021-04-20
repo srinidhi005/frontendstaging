@@ -214,13 +214,16 @@ export class ReportBuilderService {
   ELEMENT_KPI_PROJECTIONS_CF: PeriodicElement[] = [];
 
   imagermi;
+
+  organizationLogo
   
-  async initReportBuild(reportSelection, selectedCompany, selectedScenario, imagermi, valuationsContent,cover) {
+  async initReportBuild(reportSelection, selectedCompany, selectedScenario, imagermi, valuationsContent,cover, creditScoreCard, organizationLogo) {
 
     this.imagermi = imagermi;
     this.reportSelection = reportSelection;
     this.selectedCompany = selectedCompany;
     this.selectedScenario = selectedScenario;
+    this.organizationLogo = organizationLogo
 
     let finalContent = [];
     for (let index = 0; index < reportSelection.length; index++) {
@@ -247,15 +250,174 @@ export class ReportBuilderService {
             break;
 
           case 'Valuations':
+            let valData = []
+
+            let valHeaders : any = ["Name", "Actuals", "1.0", "2.0", "3.0", "4.0", "5.0", "Factor Score", "Factor Weight"]
+
+            const mainHeaderV = valHeaders.map((year, index) => {
+              if(index == 0){
+                return {
+                  text: "Valuations",
+                  style: 'header',
+                  alignment: 'left',
+                  colSpan: 3
+                }
+              }
+              else{
+                return {}
+              }
+            })
+        
+            const subHeaderV = valHeaders.map((year, index) => {
+              if(index == 0){
+                return {
+                  text: this.selectedCompany.compName + " - " + "Scenario "  + this.selectedScenario,
+                  style: 'subheader',
+                  alignment: 'left',
+                  colSpan: 3
+                }
+              }
+              else{
+                return {}
+              }
+            })
+        
+            const imagesV = valHeaders.map((year, index) => {
+              if(index == 0){
+                return this.getRMILogo()
+              }
+              else if(index == valHeaders.length - 2 && this.organizationLogo){
+                return this.getOrganizationalLogo()
+              }
+              else{
+                return {
+                  // text: index,
+                  // style: 'subheader',
+                  // alignment: 'left',
+                }
+              }
+            })
+
+            valData.push(imagesV)
+            valData.push(mainHeaderV)
+            valData.push(subHeaderV)
+
+            const tableData = {
+              //style: 'tableExample',
+              // layout: 'lightHorizontalLines',
+      
+              table: {
+                headerRows: 1,
+                heights: 20,
+                //width:'auto',
+                // widths: [250, 75, 75, 75, 75, 75, 75, 75, 75],
+                widths: [235, 70, 70, 70, 70, 70, 70, 70, 70],
+      
+                body: valData,
+              },
+              layout: this.getLayoutForTable(),
+      
+              // pageBreak: "after"
+            }
+
+            valuationsContent.unshift(tableData)
+        
             content = valuationsContent;
+
+            console.log("Valuations Data", content)
             break;
 
           case 'Financial Health Scorecard':
-            try {
-              content = await this.buildReportForScoreCard(eachReport)
-            } catch (error) {
-              
-            }
+
+            let scoreCardData = []
+
+            let headers : any = ["Name", "Actuals", "1.0", "2.0", "3.0", "4.0", "5.0", "Factor Score", "Factor Weight"]
+
+            const mainHeader = headers.map((year, index) => {
+              if(index == 0){
+                return {
+                  text: "Financial Health Score Card",
+                  style: 'header',
+                  alignment: 'left',
+                  colSpan: 3
+                }
+              }
+              else{
+                return {}
+              }
+            })
+        
+            const subHeader = headers.map((year, index) => {
+              if(index == 0){
+                return {
+                  text: this.selectedCompany.compName,
+                  style: 'subheader',
+                  alignment: 'left',
+                  colSpan: 3
+                }
+              }
+              else{
+                return {}
+              }
+            })
+        
+            const images = headers.map((year, index) => {
+              if(index == 0){
+                return this.getRMILogo()
+              }
+              else if(index == headers.length - 2 && this.organizationLogo){
+                return this.getOrganizationalLogo()
+              }
+              else{
+                return {
+                  // text: index,
+                  // style: 'subheader',
+                  // alignment: 'left',
+                }
+              }
+            })
+
+            scoreCardData.push(images)
+            scoreCardData.push(mainHeader)
+            scoreCardData.push(subHeader)
+        
+
+            content = [      
+              {
+                //style: 'tableExample',
+                // layout: 'lightHorizontalLines',
+        
+                table: {
+                  headerRows: 1,
+                  heights: 20,
+                  //width:'auto',
+                  // widths: [250, 75, 75, 75, 75, 75, 75, 75, 75],
+                  widths: [235, 70, 70, 70, 70, 70, 70, 70, 70],
+        
+                  body: scoreCardData,
+                },
+                layout: this.getLayoutForTable(),
+        
+                // pageBreak: "after"
+              },
+            //   { image: this.imagermi, width: 130, height: 90 },
+            //   {
+            //     text: "Financial Health Score Card",
+            //     style: 'header',
+            //  },
+            //   {
+            //     text: this.selectedCompany.compName,
+            //     style: 'subheader',
+            //   },
+
+            {
+              image: creditScoreCard,
+              width: 870,
+              pageBreak: "after",
+              margin: [0, 10, 0, 10],
+              pageOrientation: "portrait",
+
+            }]
             break;
 
           case 'Ratios':
@@ -1025,19 +1187,64 @@ buildReportForRatios(eachReport, actuals, projections){
       }
     })
 
-    const finalDataForSolvency = [cloneDeep(commmonHeaders)].concat([solvencyRatiosHeaders]).concat(solvencyRatiosData)
+    const mainHeader = solvencyRatiosKeys.map((year, index) => {
+      if(index == 0){
+        return {
+          text: "Solvency Ratios"  ,
+          style: 'header',
+          alignment: 'left',
+          colSpan: 3
+        }
+      }
+      else{
+        return {}
+      }
+    })
+
+    const subHeader = solvencyRatiosKeys.map((year, index) => {
+      if(index == 0){
+        return {
+          text:
+          this.selectedCompany.compName + " - " + "Scenario "  + this.selectedScenario,
+          style: 'subheader',
+          alignment: 'left',
+          colSpan: 3
+        }
+      }
+      else{
+        return {}
+      }
+    })
+
+    const images = solvencyRatiosKeys.map((year, index) => {
+      if(index == 0){
+        return this.getRMILogo()
+      }
+      else if(index == solvencyRatiosKeys.length - 2 && this.organizationLogo){
+        return this.getOrganizationalLogo()
+      }
+      else{
+        return {
+          // text: index,
+          // style: 'subheader',
+          // alignment: 'left',
+        }
+      }
+    })
+
+    const finalDataForSolvency = [images].concat([mainHeader]).concat([subHeader]).concat([cloneDeep(commmonHeaders)]).concat([solvencyRatiosHeaders]).concat(solvencyRatiosData)
 
     const content = [
 
-      { image: this.imagermi, width: 130, height: 60 },
-      {
-        text: "Solvency Ratios"  ,
-        style: 'header',
-     },
-      {
-        text: this.selectedCompany.compName + " - Scenario " + this.selectedScenario,
-        style: 'subheader',
-      },
+    //   { image: this.imagermi, width: 130, height: 90 },
+    //   {
+    //     text: "Solvency Ratios"  ,
+    //     style: 'header',
+    //  },
+    //   {
+    //     text: this.selectedCompany.compName + " - Scenario " + this.selectedScenario,
+    //     style: 'subheader',
+    //   },
       
       
       {
@@ -1051,27 +1258,7 @@ buildReportForRatios(eachReport, actuals, projections){
           widths: this.getWidthsForRatios(),
           body: finalDataForSolvency
         },
-        layout: {
-          //set custom borders size and color
-          hLineWidth: function (i, node) {
-            return i === 0 || i === node.table.body.length ? 0.5 : 0.5;
-          },
-          vLineWidth: function (i, node) {
-            return 0;
-          },
-          hLineStyle: function (i, node) {
-            if (i === 0 || i === node.table.body.length) {
-              return null;
-            }
-            // return {dash: {length: 10, space: 4}};
-          },
-          hLineColor: function (i, node) {
-            return i === 0 || i === node.table.body.length ? 'black' : 'gray';
-          },
-          // vLineColor: function (i, node) {
-          //   return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
-          // }
-        },
+        layout: this.getLayoutForTable(3),
 
         pageBreak: 'after'
       }
@@ -1126,19 +1313,64 @@ buildReportForRatios(eachReport, actuals, projections){
       }
     })
 
-    const finalDataForLiquidity= [cloneDeep(commmonHeaders)].concat([liquidityRatiosHeaders]).concat(liquidityRatiosData)
+    const mainHeader = liquidityRatiosKeys.map((year, index) => {
+      if(index == 0){
+        return {
+          text: "Liquidity Ratios"  ,
+          style: 'header',
+          alignment: 'left',
+          colSpan: 3
+        }
+      }
+      else{
+        return {}
+      }
+    })
+
+    const subHeader = liquidityRatiosKeys.map((year, index) => {
+      if(index == 0){
+        return {
+          text:
+          this.selectedCompany.compName + " - " + "Scenario "  + this.selectedScenario,
+          style: 'subheader',
+          alignment: 'left',
+          colSpan: 3
+        }
+      }
+      else{
+        return {}
+      }
+    })
+
+    const images = liquidityRatiosKeys.map((year, index) => {
+      if(index == 0){
+        return this.getRMILogo()
+      }
+      else if(index == liquidityRatiosKeys.length - 2 && this.organizationLogo){
+        return this.getOrganizationalLogo()
+      }
+      else{
+        return {
+          // text: index,
+          // style: 'subheader',
+          // alignment: 'left',
+        }
+      }
+    })
+
+    const finalDataForLiquidity= [images].concat([mainHeader]).concat([subHeader]).concat([cloneDeep(commmonHeaders)]).concat([liquidityRatiosHeaders]).concat(liquidityRatiosData)
 
     const content = [
-      { image: this.imagermi, width: 130, height: 60 },
+      // { image: this.imagermi, width: 130, height: 90 },
 
-      {
-        text: "Liquidity Ratios"  ,
-        style: 'header',
-      },
-      {
-        text: this.selectedCompany.compName + " - Scenario " + this.selectedScenario,
-        style: 'subheader',
-      },
+      // {
+      //   text: "Liquidity Ratios"  ,
+      //   style: 'header',
+      // },
+      // {
+      //   text: this.selectedCompany.compName + " - Scenario " + this.selectedScenario,
+      //   style: 'subheader',
+      // },
       {
       //style: 'tableExample',
       // layout: 'lightHorizontalLines',
@@ -1150,21 +1382,7 @@ buildReportForRatios(eachReport, actuals, projections){
         widths: this.getWidthsForRatios(),
         body: finalDataForLiquidity
       },
-      layout: {
-        //set custom borders size and color
-        hLineWidth: function (i, node) {
-          return i === 0 || i === node.table.body.length ? 0.5 : 0.5;
-        },
-        vLineWidth: function (i, node) {
-          return 0;
-        },
-        hLineColor: function (i, node) {
-          return i === 0 || i === node.table.body.length ? 'black' : 'gray';
-        },
-        // vLineColor: function (i, node) {
-        //   return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
-        // }
-      },
+      layout: this.getLayoutForTable(3),
       pageBreak: "after"
     }
     ]
@@ -1220,18 +1438,64 @@ buildReportForRatios(eachReport, actuals, projections){
       }
     })
 
-    const finalDataForReturn = [cloneDeep(commmonHeaders)].concat([returnRatiosHeaders]).concat(returnRatiosData)
-    const content = [
-      { image: this.imagermi, width: 130, height: 60 },
+    const mainHeader = returnRatiosKeys.map((year, index) => {
+      if(index == 0){
+        return {
+          text: "Return Ratios"  ,
+          style: 'header',
+          alignment: 'left',
+          colSpan: 3
+        }
+      }
+      else{
+        return {}
+      }
+    })
 
-      {
-        text: "Return Ratios"  ,
-        style: 'header',
-      },
-      {
-        text: this.selectedCompany.compName + " - Scenario " + this.selectedScenario,
-        style: 'subheader',
-      },
+    const subHeader = returnRatiosKeys.map((year, index) => {
+      if(index == 0){
+        return {
+          text:
+          this.selectedCompany.compName + " - " + "Scenario "  + this.selectedScenario,
+          style: 'subheader',
+          alignment: 'left',
+          colSpan: 3
+        }
+      }
+      else{
+        return {}
+      }
+    })
+
+    const images = returnRatiosKeys.map((year, index) => {
+      if(index == 0){
+        return this.getRMILogo()
+      }
+      else if(index == returnRatiosKeys.length - 2 && this.organizationLogo){
+        return this.getOrganizationalLogo()
+      }
+      else{
+        return {
+          // text: index,
+          // style: 'subheader',
+          // alignment: 'left',
+        }
+      }
+    })
+
+
+    const finalDataForReturn = [images].concat([mainHeader]).concat([subHeader]).concat([cloneDeep(commmonHeaders)]).concat([returnRatiosHeaders]).concat(returnRatiosData)
+    const content = [
+      // { image: this.imagermi, width: 130, height: 90 },
+
+      // {
+      //   text: "Return Ratios"  ,
+      //   style: 'header',
+      // },
+      // {
+      //   text: this.selectedCompany.compName + " - Scenario " + this.selectedScenario,
+      //   style: 'subheader',
+      // },
       {
         //style: 'tableExample',
         // layout: 'lightHorizontalLines',
@@ -1243,23 +1507,8 @@ buildReportForRatios(eachReport, actuals, projections){
           widths: this.getWidthsForRatios(),
           body: finalDataForReturn
         },
-        layout: {
-          //set custom borders size and color
-          hLineWidth: function (i, node) {
-            return i === 0 || i === node.table.body.length ? 0.5 : 0.5;
-          },
-          vLineWidth: function (i, node) {
-            return 0;
-          },
-          hLineColor: function (i, node) {
-            return i === 0 || i === node.table.body.length ? 'black' : 'gray';
-          },
-          // vLineColor: function (i, node) {
-          //   return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
-          // }
-        },
+        layout: this.getLayoutForTable(3),
         pageBreak: "after"
-
       },
     ]
 
@@ -1289,6 +1538,52 @@ buildReportForRatios(eachReport, actuals, projections){
       }
     })
 
+    const mainHeader : any = profitabilityRatiosKeys.map((year, index) => {
+      if(index == 0){
+        return {
+          text: "Profitability Ratios"  ,
+          style: 'header',
+          alignment: 'left',
+          colSpan: 3
+        }
+      }
+      else{
+        return {}
+      }
+    })
+
+    const subHeader = profitabilityRatiosKeys.map((year, index) => {
+      if(index == 0){
+        return {
+          text:
+          this.selectedCompany.compName + " - " + "Scenario "  + this.selectedScenario,
+          style: 'subheader',
+          alignment: 'left',
+          colSpan: 3
+        }
+      }
+      else{
+        return {}
+      }
+    })
+
+    const images = profitabilityRatiosKeys.map((year, index) => {
+      if(index == 0){
+        return this.getRMILogo()
+      }
+      else if(index == profitabilityRatiosKeys.length - 2 && this.organizationLogo){
+        return this.getOrganizationalLogo()
+      }
+      else{
+        return {
+          // text: index,
+          // style: 'subheader',
+          // alignment: 'left',
+        }
+      }
+    })
+
+
     const commmonHeaders = profitabilityRatiosKeys.map( (name, index) => {
       if(index == 2){
         return {text: "Actuals", bold: true, fillColor: '#fff', color: "#000", margin: [10, 10, 0, 10], border: [0, 0, 10, 0], alignment: "left"}
@@ -1313,21 +1608,23 @@ buildReportForRatios(eachReport, actuals, projections){
       profitabilityRatiosData.push(this.getMappedArr(values))
     });
 
-    const finalDataForProfit= [cloneDeep(commmonHeaders)].concat([profitabilityRatiosHeaders]).concat(profitabilityRatiosData)
+    const finalDataForProfit : any = [images].concat([mainHeader]).concat([subHeader]).concat([cloneDeep(commmonHeaders)]).concat([profitabilityRatiosHeaders]).concat(profitabilityRatiosData) as any
+
+    console.log("finalDataForProfit", finalDataForProfit)
 
     const content =  [
-      { image: this.imagermi, width: 130, height: 60 },
+      // { image: this.imagermi, width: 130, height: 90 },
 
-      // { image: imagermi, width: 150, height: 75 },
-      // { image: imagermi, width: 150, height: 75 },
-      {
-        text: "Profitability Ratios"  ,
-        style: 'header',
-      },
-      {
-        text: this.selectedCompany.compName + " - Scenario " + this.selectedScenario  ,
-        style: 'subheader',
-      },
+      // // { image: imagermi, width: 150, height: 75 },
+      // // { image: imagermi, width: 150, height: 75 },
+      // {
+      //   text: "Profitability Ratios"  ,
+      //   style: 'header',
+      // },
+      // {
+      //   text: this.selectedCompany.compName + " - Scenario " + this.selectedScenario  ,
+      //   style: 'subheader',
+      // },
       {
         //style: 'tableExample',
         // layout: 'lightHorizontalLines',
@@ -1339,21 +1636,7 @@ buildReportForRatios(eachReport, actuals, projections){
           widths: this.getWidthsForRatios(),
           body: finalDataForProfit
         },
-        layout: {
-          //set custom borders size and color
-          hLineWidth: function (i, node) {
-            return i === 0 || i === node.table.body.length ? 0.5 : 0.5;
-          },
-          vLineWidth: function (i, node) {
-            return 0;
-          },
-          hLineColor: function (i, node) {
-            return i === 0 || i === node.table.body.length ? 'black' : 'gray';
-          },
-          // vLineColor: function (i, node) {
-          //   return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
-          // }
-        },
+        layout: this.getLayoutForTable(3),
         pageBreak: "after"
       },
     ]
@@ -2179,7 +2462,55 @@ buildReportForRatios(eachReport, actuals, projections){
       }
     });
 
+    const mainHeader = inMillionsYear.map((year, index) => {
+      if(index == 0){
+        return {
+          text: "Historical & Projected Income Statement",
+          style: 'header',
+          alignment: 'left',
+          colSpan: 3
+        }
+      }
+      else{
+        return {}
+      }
+    })
+
+    const subHeader = inMillionsYear.map((year, index) => {
+      if(index == 0){
+        return {
+          text:
+          this.selectedCompany.compName + " - " + "Scenario "  + this.selectedScenario,
+          style: 'subheader',
+          alignment: 'left',
+          colSpan: 3
+        }
+      }
+      else{
+        return {}
+      }
+    })
+
+    const images = inMillionsYear.map((year, index) => {
+      if(index == 0){
+        return this.getRMILogo()
+      }
+      else if(index == inMillionsYear.length - 2 && this.organizationLogo){
+        return this.getOrganizationalLogo()
+      }
+      else{
+        return {
+          // text: index,
+          // style: 'subheader',
+          // alignment: 'left',
+        }
+      }
+    })
+
     data.push(
+      images,
+      mainHeader,
+      subHeader,
       inMillionsYear,
       this.getMappedArrForIS(totalRevenue, true),
       this.getMappedArrForIS(revenueGrowthRate, false, true, true),
@@ -2203,18 +2534,18 @@ buildReportForRatios(eachReport, actuals, projections){
 
     const content = [
       
-      { image: this.imagermi, width: 130, height: 60 },
-      {
-        text: "Historical & Projected Income Statement",
-        style: 'header',
-      },
-      {
-        text:
-          this.selectedCompany.compName + " - " + "Scenario "  + this.selectedScenario,
-          style: 'subheader',
-          // margin: [10, 20, 0, 20],
+      // { image: this.imagermi, width: 130, height: 90 },
+      // {
+      //   text: "Historical & Projected Income Statement",
+      //   style: 'header',
+      // },
+      // {
+      //   text:
+      //     this.selectedCompany.compName + " - " + "Scenario "  + this.selectedScenario,
+      //     style: 'subheader',
+      //     // margin: [10, 20, 0, 20],
 
-      },
+      // },
       {
         //style: 'tableExample',
         // layout: 'lightHorizontalLines',
@@ -2228,24 +2559,9 @@ buildReportForRatios(eachReport, actuals, projections){
 
           body: data,
         },
-        layout: {
-          //set custom borders size and color
-          hLineWidth: function (i, node) {
-            return i === 0 || i === node.table.body.length ? 0.5 : 0.5;
-          },
-          vLineWidth: function (i, node) {
-            return 0;
-          },
-          hLineColor: function (i, node) {
-            return i === 0 || i === node.table.body.length ? 'black' : 'gray';
-          },
-          // vLineColor: function (i, node) {
-          //   return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
-          // }
-        },
+        layout: this.getLayoutForTable(),
 
-         pageBreak: "after"
-
+        pageBreak: "after"
       },
     ];
 
@@ -2351,7 +2667,56 @@ buildReportForRatios(eachReport, actuals, projections){
       }
     });
 
+    const mainHeader = inMillionsYear.map((year, index) => {
+      if(index == 0){
+        return {
+          text: "Historical & Projected Balance Sheet",
+          style: 'header',
+          alignment: 'left',
+          colSpan: 3
+        }
+      }
+      else{
+        return {}
+      }
+    })
+
+    const subHeader = inMillionsYear.map((year, index) => {
+      if(index == 0){
+        return {
+          text:
+          this.selectedCompany.compName + " - " + "Scenario "  + this.selectedScenario,
+          style: 'subheader',
+          alignment: 'left',
+          colSpan: 3
+        }
+      }
+      else{
+        return {}
+      }
+    })
+
+    const images = inMillionsYear.map((year, index) => {
+      if(index == 0){
+        return this.getRMILogo()
+      }
+      else if(index == inMillionsYear.length - 2 && this.organizationLogo){
+        return this.getOrganizationalLogo()
+      }
+      else{
+        return {
+          // text: index,
+          // style: 'subheader',
+          // alignment: 'left',
+        }
+      }
+    })
+
+
     data.push(
+      images,
+      mainHeader,
+      subHeader,
       inMillionsYear,
       this.getMappedArrForBS(cashEquivalents),
       this.getMappedArrForBS(accountsReceivable),
@@ -2376,17 +2741,17 @@ buildReportForRatios(eachReport, actuals, projections){
 
     const content = [
       // {image:imagermi,width:150,height:75},
-      { image: this.imagermi, width: 130, height: 60 },
+      // { image: this.imagermi, width: 130, height: 90 },
 
-      {
-        text: "Historical & Projected Balance Sheet",
-        style: 'header',
-      },
-      {
-        text:
-          this.selectedCompany.compName + " - " + "Scenario "  + this.selectedScenario,
-        style: 'subheader',
-      },
+      // {
+      //   text: "Historical & Projected Balance Sheet",
+      //   style: 'header',
+      // },
+      // {
+      //   text:
+      //     this.selectedCompany.compName + " - " + "Scenario "  + this.selectedScenario,
+      //   style: 'subheader',
+      // },
       {
         //style: 'tableExample',
         // layout: 'lightHorizontalLines',
@@ -2400,21 +2765,7 @@ buildReportForRatios(eachReport, actuals, projections){
           
           body: data,
         },
-        layout: {
-          //set custom borders size and color
-          hLineWidth: function (i, node) {
-            return i === 0 || i === node.table.body.length ? 0.5 : 0.5;
-          },
-          vLineWidth: function (i, node) {
-            return 0;
-          },
-          hLineColor: function (i, node) {
-            return i === 0 || i === node.table.body.length ? 'black' : 'gray';
-          },
-          // vLineColor: function (i, node) {
-          //   return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
-          // }
-        },
+        layout: this.getLayoutForTable(),
 
          pageBreak: "after"
 
@@ -2512,7 +2863,56 @@ buildReportForRatios(eachReport, actuals, projections){
       }
     });
 
+    const mainHeader = inMillionsYear.map((year, index) => {
+      if(index == 0){
+        return {
+          text: "Historical & Projected Cash Flow Statement",
+          style: 'header',
+          alignment: 'left',
+          colSpan: 3
+        }
+      }
+      else{
+        return {}
+      }
+    })
+
+    const subHeader = inMillionsYear.map((year, index) => {
+      if(index == 0){
+        return {
+          text:
+          this.selectedCompany.compName + " - " + "Scenario "  + this.selectedScenario,
+          style: 'subheader',
+          alignment: 'left',
+          colSpan: 3
+        }
+      }
+      else{
+        return {}
+      }
+    })
+
+    const images = inMillionsYear.map((year, index) => {
+      if(index == 0){
+        return this.getRMILogo()
+      }
+      else if(index == inMillionsYear.length - 2 && this.organizationLogo){
+        return this.getOrganizationalLogo()
+      }
+      else{
+        return {
+          // text: index,
+          // style: 'subheader',
+          // alignment: 'left',
+        }
+      }
+    })
+
+
     data.push(
+      images,
+      mainHeader,
+      subHeader,
       inMillionsYear,
       this.getMappedArrForCF(netIncome),
       this.getMappedArrForCF(DA),
@@ -2539,17 +2939,17 @@ buildReportForRatios(eachReport, actuals, projections){
     console.log(inMillionsYear);
 
     const content = [
-      { image: this.imagermi, width: 130, height: 60 },
+      // { image: this.imagermi, width: 130, height: 90 },
 
-      {
-        text: "Historical & Projected Cash Flow Statement",
-        style: 'header',
-      },
-      {
-        text:
-          this.selectedCompany.compName + " - " + "Scenario "  + this.selectedScenario,
-        style: 'subheader',
-      },
+      // {
+      //   text: "Historical & Projected Cash Flow Statement",
+      //   style: 'header',
+      // },
+      // {
+      //   text:
+      //     this.selectedCompany.compName + " - " + "Scenario "  + this.selectedScenario,
+      //   style: 'subheader',
+      // },
       {
         //style: 'tableExample',
         // layout: 'lightHorizontalLines',
@@ -2562,21 +2962,7 @@ buildReportForRatios(eachReport, actuals, projections){
           widths: [230, 82, 82, 82, 82, 82, 82, 82],
           body: data,
         },
-        layout: {
-          //set custom borders size and color
-          hLineWidth: function (i, node) {
-            return i === 0 || i === node.table.body.length ? 0.5 : 0.5;
-          },
-          vLineWidth: function (i, node) {
-            return 0;
-          },
-          hLineColor: function (i, node) {
-            return i === 0 || i === node.table.body.length ? 'black' : 'gray';
-          },
-          // vLineColor: function (i, node) {
-          //   return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
-          // }
-        },
+        layout: this.getLayoutForTable(),
 
          pageBreak: "after"
 
@@ -2604,6 +2990,110 @@ buildReportForRatios(eachReport, actuals, projections){
     headersAct = ['No', '	Income Statement (P&L)', 'From', 'To', 'KPI'];
     headersProj = ['No', '	Income Statement (P&L)', 'From', 'To', 'KPI'];
 
+    const mainHeaderACT = headersAct.map((year, index) => {
+      if(index == 0){
+        return {
+          text: "KPI Income Statement",
+          style: 'header',
+          alignment: 'left',
+          colSpan: 3
+        }
+      }
+      else{
+        return {}
+      }
+    })
+
+    const subSubHeaderACT = headersAct.map((year, index) => {
+      if(index == 0){
+        return {
+          text: 'Historical Key Metrics',
+          style: 'subheader',
+          alignment: 'left',
+          colSpan: 3
+        }
+      }
+      else{
+        return {}
+      }
+    })
+
+    const subHeaderACT = headersAct.map((year, index) => {
+      if(index == 0){
+        return {
+          text:
+          this.selectedCompany.compName + " - " + "Scenario "  + this.selectedScenario,
+          style: 'subheader',
+          alignment: 'left',
+          colSpan: 3
+        }
+      }
+      else{
+        return {}
+      }
+    })
+
+
+    const mainHeaderPROJ = headersProj.map((year, index) => {
+      if(index == 0){
+        return {
+          text: "KPI Income Statement",
+          style: 'header',
+          alignment: 'left',
+          colSpan: 3
+        }
+      }
+      else{
+        return {}
+      }
+    })
+
+    const subSubHeaderPROJ = headersProj.map((year, index) => {
+      if(index == 0){
+        return {
+          text: 'Projected Key Metrics',
+          style: 'subheader',
+          alignment: 'left',
+          colSpan: 3
+        }
+      }
+      else{
+        return {}
+      }
+    })
+
+    const subHeaderPROJ = headersProj.map((year, index) => {
+      if(index == 0){
+        return {
+          text:
+          this.selectedCompany.compName + " - " + "Scenario "  + this.selectedScenario,
+          style: 'subheader',
+          alignment: 'left',
+          colSpan: 3
+        }
+      }
+      else{
+        return {}
+      }
+    })
+
+
+    const images = headersAct.map((year, index) => {
+      if(index == 0){
+        return this.getRMILogo()
+      }
+      else if(index == headersAct.length - 2 && this.organizationLogo){
+        return this.getOrganizationalLogo()
+      }
+      else{
+        return {
+          // text: index,
+          // style: 'subheader',
+          // alignment: 'left',
+        }
+      }
+    })
+
     headersAct = headersAct.map( (name, index) => {
       if(index == 0){
         return {text: name, bold: true, fillColor: '#164A5B', color: "#fff", margin: [10, 10, 0, 10], border: [10, 10, 10, 10], alignment: "left"}
@@ -2621,6 +3111,7 @@ buildReportForRatios(eachReport, actuals, projections){
         return {text: name, bold: true, fillColor: '#164A5B', color: "#fff", margin: [0, 10, 0, 10], border: [10, 10, 10, 10], alignment: "left"}
       }
     })
+
 
     const keys = Object.keys(this.ELEMENT_KPI_ACTUALS_IS[0]);
 
@@ -2648,29 +3139,29 @@ buildReportForRatios(eachReport, actuals, projections){
     masterHeaderAct.push(headersAct);
     masterHeaderProj.push(headersProj);
 
-    dataForActuals = masterHeaderAct.concat(actualsData);
-    dataForProj = masterHeaderProj.concat(projData);
+    dataForActuals = [images].concat([mainHeaderACT]).concat([subSubHeaderACT]).concat([subHeaderACT]).concat(masterHeaderAct) .concat(actualsData);
+    dataForProj = [images].concat([mainHeaderPROJ]).concat([subSubHeaderPROJ]).concat([subHeaderPROJ]).concat(masterHeaderProj).concat(projData);
 
     console.log("dataForActuals", dataForActuals);
     console.log("dataForProj", dataForProj);
 
     const content = [
-      { image: this.imagermi, width: 130, height: 60 },
+      // { image: this.imagermi, width: 130, height: 90 },
 
-      // { image: imagermi, width: 150, height: 75 },
-      // { image: imagermi, width: 150, height: 75 },
-      {
-        text: "KPI Income Statement",
-        style: 'header',
-      },
-      {
-        text: this.selectedCompany.compName + " - " + "Scenario " + this.selectedScenario,
-        style: 'subheader',
-      },
-      {
-        text: 'Historical Key Metrics',
-        style: 'subheader',
-      },
+      // // { image: imagermi, width: 150, height: 75 },
+      // // { image: imagermi, width: 150, height: 75 },
+      // {
+      //   text: "KPI Income Statement",
+      //   style: 'header',
+      // },
+      // {
+      //   text: this.selectedCompany.compName + " - " + "Scenario " + this.selectedScenario,
+      //   style: 'subheader',
+      // },
+      // {
+      //   text: 'Historical Key Metrics',
+      //   style: 'subheader',
+      // },
       {
         //style: 'tableExample',
         // layout: 'lightHorizontalLines',
@@ -2682,42 +3173,28 @@ buildReportForRatios(eachReport, actuals, projections){
           widths: this.getWidthsForKPI(),
           body: dataForActuals
         },
-        layout: {
-          //set custom borders size and color
-          hLineWidth: function (i, node) {
-            return i === 0 || i === node.table.body.length ? 0.5 : 0.5;
-          },
-          vLineWidth: function (i, node) {
-            return 0;
-          },
-          hLineColor: function (i, node) {
-            return i === 0 || i === node.table.body.length ? 'black' : 'gray';
-          },
-          // vLineColor: function (i, node) {
-          //   return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
-          // }
-        },
+        layout: this.getLayoutForTable(3),
 
         pageBreak: "after"
 
       },
 
-      { image: this.imagermi, width: 130, height: 60 },
+      // { image: this.imagermi, width: 130, height: 90 },
 
-      // { image: imagermi, width: 150, height: 75 },
-      // { image: imagermi, width: 150, height: 75 },
-      {
-        text: "KPI Income Statement",
-        style: 'header',
-      },
-      {
-        text: this.selectedCompany.compName + " - " + "Scenario " + this.selectedScenario,
-        style: 'subheader',
-      },
-      {
-        text: 'Projected Key Metrics',
-        style: 'subheader',
-      },
+      // // { image: imagermi, width: 150, height: 75 },
+      // // { image: imagermi, width: 150, height: 75 },
+      // {
+      //   text: "KPI Income Statement",
+      //   style: 'header',
+      // },
+      // {
+      //   text: this.selectedCompany.compName + " - " + "Scenario " + this.selectedScenario,
+      //   style: 'subheader',
+      // },
+      // {
+      //   text: 'Projected Key Metrics',
+      //   style: 'subheader',
+      // },
       {
         // style: 'tableExample',
         table: {
@@ -2727,21 +3204,7 @@ buildReportForRatios(eachReport, actuals, projections){
           widths: this.getWidthsForKPI(),
           body: dataForProj,
         },
-        layout: {
-          //set custom borders size and color
-          hLineWidth: function (i, node) {
-            return i === 0 || i === node.table.body.length ? 0.5 : 0.5;
-          },
-          vLineWidth: function (i, node) {
-            return 0;
-          },
-          hLineColor: function (i, node) {
-            return i === 0 || i === node.table.body.length ? 'black' : 'gray';
-          },
-          // vLineColor: function (i, node) {
-          //   return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
-          // }
-        },
+        layout: this.getLayoutForTable(3),
 
          pageBreak: "after"
 
@@ -2770,6 +3233,111 @@ buildReportForRatios(eachReport, actuals, projections){
 
     headersAct = ['No', '	Balance Sheet', 'From', 'To', 'KPI'];
     headersProj = ['No', '	Balance Sheet', 'From', 'To', 'KPI'];
+
+    const mainHeaderACT = headersAct.map((year, index) => {
+      if(index == 0){
+        return {
+          text: "KPI Balance Sheet",
+          style: 'header',
+          alignment: 'left',
+          colSpan: 3
+        }
+      }
+      else{
+        return {}
+      }
+    })
+
+    const subSubHeaderACT = headersAct.map((year, index) => {
+      if(index == 0){
+        return {
+          text: 'Historical Key Metrics',
+          style: 'subheader',
+          alignment: 'left',
+          colSpan: 3
+        }
+      }
+      else{
+        return {}
+      }
+    })
+
+    const subHeaderACT = headersAct.map((year, index) => {
+      if(index == 0){
+        return {
+          text:
+          this.selectedCompany.compName + " - " + "Scenario "  + this.selectedScenario,
+          style: 'subheader',
+          alignment: 'left',
+          colSpan: 3
+        }
+      }
+      else{
+        return {}
+      }
+    })
+
+
+    const mainHeaderPROJ = headersProj.map((year, index) => {
+      if(index == 0){
+        return {
+          text: "KPI Balance Sheet",
+          style: 'header',
+          alignment: 'left',
+          colSpan: 3
+        }
+      }
+      else{
+        return {}
+      }
+    })
+
+    const subSubHeaderPROJ = headersProj.map((year, index) => {
+      if(index == 0){
+        return {
+          text: 'Projected Key Metrics',
+          style: 'subheader',
+          alignment: 'left',
+          colSpan: 3
+        }
+      }
+      else{
+        return {}
+      }
+    })
+
+    const subHeaderPROJ = headersProj.map((year, index) => {
+      if(index == 0){
+        return {
+          text:
+          this.selectedCompany.compName + " - " + "Scenario "  + this.selectedScenario,
+          style: 'subheader',
+          alignment: 'left',
+          colSpan: 3
+        }
+      }
+      else{
+        return {}
+      }
+    })
+
+
+    const images = headersAct.map((year, index) => {
+      if(index == 0){
+        return this.getRMILogo()
+      }
+      else if(index == headersAct.length - 2 && this.organizationLogo){
+        return this.getOrganizationalLogo()
+      }
+      else{
+        return {
+          // text: index,
+          // style: 'subheader',
+          // alignment: 'left',
+        }
+      }
+    })
+
 
     headersAct = headersAct.map( (name, index) => {
       if(index == 0){
@@ -2815,8 +3383,9 @@ buildReportForRatios(eachReport, actuals, projections){
     masterHeaderAct.push(headersAct);
     masterHeaderProj.push(headersProj);
 
-    dataForActuals = masterHeaderAct.concat(actualsData);
-    dataForProj = masterHeaderProj.concat(projData);
+    dataForActuals = [images].concat([mainHeaderACT]).concat([subSubHeaderACT]).concat([subHeaderACT]).concat(masterHeaderAct) .concat(actualsData);
+    dataForProj = [images].concat([mainHeaderPROJ]).concat([subSubHeaderPROJ]).concat([subHeaderPROJ]).concat(masterHeaderProj).concat(projData);
+
 
     console.log("dataForActuals", dataForActuals);
     console.log("dataForProj", dataForProj);
@@ -2824,21 +3393,21 @@ buildReportForRatios(eachReport, actuals, projections){
     const content = [
       // { image: imagermi, width: 150, height: 75 },
       // { image: imagermi, width: 150, height: 75 },
-      { image: this.imagermi, width: 130, height: 60 },
+      // { image: this.imagermi, width: 130, height: 90 },
 
-      {
-        text: "KPI Balance Sheet",
-        style: 'header',
-      },
-      {
-        text: this.selectedCompany.compName + " - " + "Scenario " + this.selectedScenario,
-        style: 'subheader',
-      },
+      // {
+      //   text: "KPI Balance Sheet",
+      //   style: 'header',
+      // },
+      // {
+      //   text: this.selectedCompany.compName + " - " + "Scenario " + this.selectedScenario,
+      //   style: 'subheader',
+      // },
       
-      {
-        text: 'Historical Key Metrics',
-        style: 'subheader',
-      },
+      // {
+      //   text: 'Historical Key Metrics',
+      //   style: 'subheader',
+      // },
       {
         //style: 'tableExample',
         // layout: 'lightHorizontalLines',
@@ -2850,41 +3419,27 @@ buildReportForRatios(eachReport, actuals, projections){
           widths: this.getWidthsForKPI(),
           body: dataForActuals
         },
-        layout: {
-          //set custom borders size and color
-          hLineWidth: function (i, node) {
-            return i === 0 || i === node.table.body.length ? 0.5 : 0.5;
-          },
-          vLineWidth: function (i, node) {
-            return 0;
-          },
-          hLineColor: function (i, node) {
-            return i === 0 || i === node.table.body.length ? 'black' : 'gray';
-          },
-          // vLineColor: function (i, node) {
-          //   return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
-          // }
-        },
+        layout: this.getLayoutForTable(3),
 
         pageBreak: "after"
 
       },
 
-      { image: this.imagermi, width: 130, height: 60 },
+      // { image: this.imagermi, width: 130, height: 90 },
 
-      {
-        text: "KPI Balance Sheet",
-        style: 'header',
-      },
-      {
-        text: this.selectedCompany.compName + " - " + "Scenario " + this.selectedScenario,
-        style: 'subheader',
-      },
+      // {
+      //   text: "KPI Balance Sheet",
+      //   style: 'header',
+      // },
+      // {
+      //   text: this.selectedCompany.compName + " - " + "Scenario " + this.selectedScenario,
+      //   style: 'subheader',
+      // },
 
-      {
-        text: 'Projected Key Metrics',
-        style: 'subheader',
-      },
+      // {
+      //   text: 'Projected Key Metrics',
+      //   style: 'subheader',
+      // },
       {
         // style: 'tableExample',
         table: {
@@ -2894,21 +3449,7 @@ buildReportForRatios(eachReport, actuals, projections){
           widths: this.getWidthsForKPI(),
           body: dataForProj,
         },
-        layout: {
-          //set custom borders size and color
-          hLineWidth: function (i, node) {
-            return i === 0 || i === node.table.body.length ? 0.5 : 0.5;
-          },
-          vLineWidth: function (i, node) {
-            return 0;
-          },
-          hLineColor: function (i, node) {
-            return i === 0 || i === node.table.body.length ? 'black' : 'gray';
-          },
-          // vLineColor: function (i, node) {
-          //   return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
-          // }
-        },
+        layout: this.getLayoutForTable(3),
          pageBreak: "after"
       }
     ]
@@ -2935,6 +3476,111 @@ buildReportForRatios(eachReport, actuals, projections){
 
     headersAct = ['No', '	Cash Flow Statement', 'From', 'To', 'KPI'];
     headersProj = ['No', '	Cash Flow Statement ', 'From', 'To', 'KPI'];
+
+    const mainHeaderACT = headersAct.map((year, index) => {
+      if(index == 0){
+        return {
+          text: "KPI Cash Flow Statement",
+          style: 'header',
+          alignment: 'left',
+          colSpan: 3
+        }
+      }
+      else{
+        return {}
+      }
+    })
+
+    const subSubHeaderACT = headersAct.map((year, index) => {
+      if(index == 0){
+        return {
+          text: 'Historical Key Metrics',
+          style: 'subheader',
+          alignment: 'left',
+          colSpan: 3
+        }
+      }
+      else{
+        return {}
+      }
+    })
+
+    const subHeaderACT = headersAct.map((year, index) => {
+      if(index == 0){
+        return {
+          text:
+          this.selectedCompany.compName + " - " + "Scenario "  + this.selectedScenario,
+          style: 'subheader',
+          alignment: 'left',
+          colSpan: 3
+        }
+      }
+      else{
+        return {}
+      }
+    })
+
+
+    const mainHeaderPROJ = headersProj.map((year, index) => {
+      if(index == 0){
+        return {
+          text: "KPI Cash Flow Statement",
+          style: 'header',
+          alignment: 'left',
+          colSpan: 3
+        }
+      }
+      else{
+        return {}
+      }
+    })
+
+    const subSubHeaderPROJ = headersProj.map((year, index) => {
+      if(index == 0){
+        return {
+          text: 'Projected Key Metrics',
+          style: 'subheader',
+          alignment: 'left',
+          colSpan: 3
+        }
+      }
+      else{
+        return {}
+      }
+    })
+
+    const subHeaderPROJ = headersProj.map((year, index) => {
+      if(index == 0){
+        return {
+          text:
+          this.selectedCompany.compName + " - " + "Scenario "  + this.selectedScenario,
+          style: 'subheader',
+          alignment: 'left',
+          colSpan: 3
+        }
+      }
+      else{
+        return {}
+      }
+    })
+
+
+    const images = headersAct.map((year, index) => {
+      if(index == 0){
+        return this.getRMILogo()
+      }
+      else if(index == headersAct.length - 2 && this.organizationLogo){
+        return this.getOrganizationalLogo()
+      }
+      else{
+        return {
+          // text: index,
+          // style: 'subheader',
+          // alignment: 'left',
+        }
+      }
+    })
+
 
     headersAct = headersAct.map( (name, index) => {
       if(index == 0){
@@ -2980,8 +3626,8 @@ buildReportForRatios(eachReport, actuals, projections){
     masterHeaderAct.push(headersAct);
     masterHeaderProj.push(headersProj);
 
-    dataForActuals = masterHeaderAct.concat(actualsData);
-    dataForProj = masterHeaderProj.concat(projData);
+    dataForActuals = [images].concat([mainHeaderACT]).concat([subSubHeaderACT]).concat([subHeaderACT]).concat(masterHeaderAct) .concat(actualsData);
+    dataForProj = [images].concat([mainHeaderPROJ]).concat([subSubHeaderPROJ]).concat([subHeaderPROJ]).concat(masterHeaderProj).concat(projData);
 
     console.log("dataForActuals", dataForActuals);
     console.log("dataForProj", dataForProj);
@@ -2989,20 +3635,20 @@ buildReportForRatios(eachReport, actuals, projections){
     const content = [
       // { image: imagermi, width: 150, height: 75 },
       // { image: imagermi, width: 150, height: 75 },
-      { image: this.imagermi, width: 130, height: 60 },
+      // { image: this.imagermi, width: 130, height: 90 },
 
-      {
-        text: "KPI Cash Flow Statement",
-        style: 'header',
-      },
-      {
-        text: this.selectedCompany.compName + " - " + "Scenario "+ this.selectedScenario,
-        style: 'subheader',
-      },
-      {
-        text: 'Historical Key Metrics',
-        style: 'subheader',
-      },
+      // {
+      //   text: "KPI Cash Flow Statement",
+      //   style: 'header',
+      // },
+      // {
+      //   text: this.selectedCompany.compName + " - " + "Scenario "+ this.selectedScenario,
+      //   style: 'subheader',
+      // },
+      // {
+      //   text: 'Historical Key Metrics',
+      //   style: 'subheader',
+      // },
       {
         //style: 'tableExample',
         // layout: 'lightHorizontalLines',
@@ -3014,40 +3660,26 @@ buildReportForRatios(eachReport, actuals, projections){
           widths: this.getWidthsForKPI(),
           body: dataForActuals
         },
-        layout: {
-          //set custom borders size and color
-          hLineWidth: function (i, node) {
-            return i === 0 || i === node.table.body.length ? 0.5 : 0.5;
-          },
-          vLineWidth: function (i, node) {
-            return 0;
-          },
-          hLineColor: function (i, node) {
-            return i === 0 || i === node.table.body.length ? 'black' : 'gray';
-          },
-          // vLineColor: function (i, node) {
-          //   return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
-          // }
-        },
+        layout: this.getLayoutForTable(3),
 
         pageBreak: "after"
 
       },
-      { image: this.imagermi, width: 130, height: 60 },
+      // { image: this.imagermi, width: 130, height: 90 },
 
-      {
-        text: "KPI Cash Flow Statement",
-        style: 'header',
-      },
-      {
-        text: this.selectedCompany.compName + " - " + "Scenario "+ this.selectedScenario,
-        style: 'subheader',
-      },
+      // {
+      //   text: "KPI Cash Flow Statement",
+      //   style: 'header',
+      // },
+      // {
+      //   text: this.selectedCompany.compName + " - " + "Scenario "+ this.selectedScenario,
+      //   style: 'subheader',
+      // },
 
-      {
-        text: 'Projected Key Metrics',
-        style: 'subheader',
-      },
+      // {
+      //   text: 'Projected Key Metrics',
+      //   style: 'subheader',
+      // },
       {
         // style: 'tableExample',
         
@@ -3058,21 +3690,7 @@ buildReportForRatios(eachReport, actuals, projections){
           widths: this.getWidthsForKPI(),
           body: dataForProj,
         },
-        layout: {
-          //set custom borders size and color
-          hLineWidth: function (i, node) {
-            return i === 0 || i === node.table.body.length ? 0.5 : 0.5;
-          },
-          vLineWidth: function (i, node) {
-            return 0;
-          },
-          hLineColor: function (i, node) {
-            return i === 0 || i === node.table.body.length ? 'black' : 'gray';
-          },
-          // vLineColor: function (i, node) {
-          //   return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
-          // }
-        },
+        layout: this.getLayoutForTable(3),
 
          pageBreak: "after"
       }
@@ -3149,7 +3767,7 @@ buildReportForRatios(eachReport, actuals, projections){
     const content = [
       // { image: imagermi, width: 150, height: 75 },
       // { image: imagermi, width: 150, height: 75 },
-      { image: this.imagermi, width: 130, height: 60 },
+      { image: this.imagermi, width: 130, height: 90 },
 
       {
         text: "Financial Health Scorecard",
@@ -3488,7 +4106,7 @@ getMappedArrS(inputArr,rowIndex) {
           return {
             text:
               year.indexOf('-') >= 0
-                ? '( ' + year.replace('-', '') + ' )'
+                ? '(' + year.replace('-', '') + ')'
                 : year,
             margin: [0, 10, 0, 10],
             alignment: 'right',
@@ -3498,7 +4116,7 @@ getMappedArrS(inputArr,rowIndex) {
           return {
             text:
               year.indexOf('-') >= 0
-                ? '( ' + year.replace('-', '') + ' )'
+                ? '(' + year.replace('-', '') + ')'
                 : year,
             margin: [0, 10, 0, 10],
             alignment: 'right',
@@ -3528,7 +4146,7 @@ getMappedArrS(inputArr,rowIndex) {
           return {
             text:
               year.indexOf('-') >= 0
-                ? '( ' + year.replace('-', '') + ' )'
+                ? '(' + year.replace('-', '') + ')'
                 : year,
             margin: [0, 10, 0, 10],
             alignment: 'right',
@@ -3538,7 +4156,7 @@ getMappedArrS(inputArr,rowIndex) {
           return {
             text:
               year.indexOf('-') >= 0
-                ? '( ' + year.replace('-', '') + ' )'
+                ? '(' + year.replace('-', '') + ')'
                 : year,
             margin: [0, 10, 0, 10],
             alignment: 'right',
@@ -3578,7 +4196,7 @@ getMappedArrS(inputArr,rowIndex) {
           return {
             text:
               year && year.indexOf('-') >= 0
-                ? '( ' + year.replace('-', '') + ' )'
+                ? '(' + year.replace('-', '') + ')'
                 : year,
             margin: [0, 10, 0, 10],
             alignment: 'right',
@@ -3589,7 +4207,7 @@ getMappedArrS(inputArr,rowIndex) {
           return {
             text:
               year && year.indexOf('-') >= 0
-                ? '( ' + year.replace('-', '') + ' )'
+                ? '(' + year.replace('-', '') + ')'
                 : year,
             margin: [0, 10, 0, 10],
             alignment: 'right',
@@ -3609,5 +4227,37 @@ getMappedArrS(inputArr,rowIndex) {
 
   getWidthsForKPI(){
     return [100, 447, 100, 100, 85]
+  }
+
+  getLayoutForTable(index?){
+    return {
+      //set custom borders size and color
+      hLineWidth: function (i, node) {
+        return (i === 0 || i == 1 || i == 2 || i == index) || i === node.table.body.length ? 0 : 0.5;
+      },
+      vLineWidth: function (i, node) {
+        return 0;
+      },
+      hLineColor: function (i, node) {
+        return (i === 0 || i == 1 || i == 2 || i == index) || i === node.table.body.length ? 'white' : 'gray';
+      },
+      // vLineColor: function (i, node) {
+      //   return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
+      // }
+    }
+  }
+
+  getOrganizationalLogo(){
+    return {
+      image: this.organizationLogo,  width: 135, height: 65,
+      colSpan: 2,
+      alignment: "right"
+    }
+  }
+
+  getRMILogo(){
+    return {
+      image: this.imagermi,  width: 135, height: 65,
+    }
   }
 }

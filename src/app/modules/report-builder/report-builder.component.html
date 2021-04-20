@@ -142,7 +142,10 @@
                     </div>
                 </mat-card-content>
                 <img id='imgToExport' #imagecanvas src='../../../assets/images/RMI_logo.jpg' style='display:none; border: none; box-shadow: none;'
-                    height="400" width="600" >
+                    >
+
+                <img id='imgToExport' style="display:none; border: none; box-shadow: none; margin-top: 100px;" 
+                 #imageOrganizational [src]='organizationLogo'>   
 
             </mat-card>
         </div>
@@ -1367,3 +1370,245 @@
 <ng-template [ngIf]="showCoverImage">
   <img id='imgToExport' style="border: none; box-shadow: none; margin-top: 100px;" #imagecover src='../../../assets/images/Report_logo.jpg'>
 </ng-template>
+
+<ng-template [ngIf]="showOrganizationalLogo && organizationLogo">
+  <img id='imgToExport' style="border: none; box-shadow: none; margin-top: 100px;"  height="450" width="600"  #imageOrganizational [src]='organizationLogo'>
+</ng-template>
+
+
+<ng-template [ngIf]="showValuations">
+  <div class="content score-card"  style="width:100%;text-align:center; margin-top: 100px;">
+      <div class=" row" #creditScoreCard>
+          <div class=" col-md-12">
+              <div class=" card" >
+                  <div style="border-radius:25px">
+                              </div>
+                  <div class=" card-body" style="padding: 0px">
+  
+                      <table class=" table tablesorter">
+                          <thead>
+                              <tr style="color:black;">
+  
+                              </tr>
+                              <tr style="background:#164a5b;color:white;text-align:center;margin:0px;vertical-align:middle;border-top-left-radius:5px;border-top-right-radius:5px;height:50px;padding-top:10px;font-weight:bold">
+                                  <td ></td>
+                                  <td style="width:190px;font-style:italic;font-weight:bold">Actuals</td>
+                                  <td style="width:140px;font-weight:bold">1.0<br/><span style="font-style:italic;font-weight:bold">(Poor)</span></td>
+                                  <td style="width:140px;font-weight:bold">2.0<br/><span style="font-style:italic;font-weight:bold">(Below Average)</span></td>
+                                  <td style="width:140px;font-weight:bold">3.0<br/><span style="font-style:italic;font-weight:bold">(Average)</span></td>
+                                  <td style="width:140px;font-weight:bold">4.0<br/><span style="font-style:italic;font-weight:bold">(Above Average)</span></td>
+                                  <td style="width:140px;font-weight:bold">5.0<br/><span style="font-style:italic;font-weight:bold">(Exceptional)</span></td>
+                                  <td style="width:100px;font-weight:bold">Factor<br />Score</td>
+                                  <td style="width:100px;font-weight:bold">Factor<br />Weight</td>
+                              </tr>
+  
+  
+                              <tr>
+                                  <td class="left" style="vertical-align:middle"> <b>I) Historical Revenue CAGR</b> <span style="font-style:italic"> (Last 3 years)</span>
+                                  </td>
+                                  <td style="font-style:italic">{{scoreCardData1?.revenuecagr | number: '1.1-1'}}%</td>
+                                  <td [class.highlight]="isInSegment(1, scoreCardData?.revenuecagr)"> < 0.0%</td>
+                                  <td [class.highlight]="isInSegment(2, scoreCardData?.revenuecagr)">0.0% - 2.5% </td>
+                                  <td [class.highlight]="isInSegment(3, scoreCardData?.revenuecagr)">2.5% - 5.0% </td>
+                                  <td [class.highlight]="isInSegment(4, scoreCardData?.revenuecagr)">5.0% - 10.0% </td>
+                                  <td [class.highlight]="isInSegment(5, scoreCardData?.revenuecagr)"> > 10.0%
+                                  </td>
+                                  <td> {{scoreCardData?.revenuecagr | number: '1.1-1'}} </td>
+                                  <td>{{scoreCardData?.factorweight | number: '1.1-1'}}%</td>
+                              </tr>
+  
+                              <tr style="border-collapse: separate">
+                                  <td class="left" style="vertical-align:middle">
+                                      <b>II) Historical Gross Margins</b> <span style="font-style:italic"> (Avg. of last 3 years)</span>
+                                  </td>
+                                  <td style="font-style:italic">{{scoreCardData1?.avggrossmargin | number: '1.1-1'}}%</td>
+                                  <td [class.highlight]="isInSegment(1, scoreCardData?.avggrossmargin)">0.0% - 10.0%
+                                  </td>
+                                  <td [class.highlight]="isInSegment(2, scoreCardData?.avggrossmargin)">10.0% - 20.0%
+                                  </td>
+                                  <td [class.highlight]="isInSegment(3, scoreCardData?.avggrossmargin)">20.0% - 30.0%
+                                  </td>
+                                  <td [class.highlight]="isInSegment(4, scoreCardData?.avggrossmargin)"> 30.0% - 40.0%
+                                  </td>
+                                  <td [class.highlight]="isInSegment(5, scoreCardData?.avggrossmargin)"> > 40.0%
+                                  </td>
+                                  <td> {{scoreCardData?.avggrossmargin | number: '1.1-1'}} </td>
+                                  <td>{{scoreCardData?.factorweight | number: '1.1-1'}}%</td>
+                              </tr>
+                              <tr>
+  
+                                  <td class="left" style="vertical-align:middle"> <b>III)  Historical EBITDA Margins</b> <span style="font-style:italic"> (Avg. of last
+                                      3 years)</span></td>
+                                  <td style="font-style:italic"> {{scoreCardData1?.avgebitdamargin | number: '1.1-1'}}%</td>
+                                  <td [class.highlight]="isInSegment(1, scoreCardData?.avgebitdamargin)">
+                                      < 5.0% </td>
+                                  <td [class.highlight]="isInSegment(2, scoreCardData?.avgebitdamargin)">5.0% - 10.0% </td>
+                                  <td [class.highlight]="isInSegment(3, scoreCardData?.avgebitdamargin)"> 10.0% - 15.0%
+                                  </td>
+                                  <td [class.highlight]="isInSegment(4, scoreCardData?.avgebitdamargin)">15.0% - 20.0%
+                                  </td>
+                                  <td [class.highlight]="isInSegment(5, scoreCardData?.avgebitdamargin)"> > 20.0%
+                                  </td>
+                                  <td>{{scoreCardData?.avgebitdamargin | number: '1.1-1'}} </td>
+                                  <td>{{scoreCardData?.factorweight | number: '1.1-1'}}%</td>
+                              </tr>
+                              <tr>
+  
+                                  <td class="left" style="vertical-align:middle"><b> IV) Historical EBITDA CAGR</b> <span style="font-style:italic"> (Last 3 years)</span>
+                                  </td>
+                                  <td style="font-style:italic"> {{scoreCardData1?.ebitdacagr | number: '1.1-1'}}%</td>
+                                  <td [class.highlight]="isInSegment(1, scoreCardData?.ebitdacagr)">
+                                      < 0.0% </td>
+                                  <td [class.highlight]="isInSegment(2, scoreCardData?.ebitdacagr)">0.0% - 2.5%
+                                  </td>
+                                  <td [class.highlight]="isInSegment(3, scoreCardData?.ebitdacagr)">2.5% - 5.0%
+                                  </td>
+                                  <td [class.highlight]="isInSegment(4, scoreCardData?.ebitdacagr)">5.0 - 10.0%
+                                  </td>
+                                  <td [class.highlight]="isInSegment(5, scoreCardData?.ebitdacagr)"> > 10.0
+                                  </td>
+                                  <td>{{scoreCardData?.ebitdacagr | number: '1.1-1'}} </td>
+                                  <td>{{scoreCardData?.factorweight | number: '1.1-1'}}%</td>
+                              </tr>
+  
+                              <tr>
+  
+                                  <td class="left" style="vertical-align:middle"> <b>V) Total Debt-to-EBITDA</b><span style="font-style:italic"> (Last historical
+                                      year)</span>
+                                  </td>
+                                  <td style="font-style:italic"> {{scoreCardData1?.totaldebtebitda | number: '1.1-1'}}x</td>
+                                  <td [class.highlight]="isInSegment(1, scoreCardData?.totaldebtebitda)">> 5.0x
+                                  </td>
+                                  <td [class.highlight]="isInSegment(2, scoreCardData?.totaldebtebitda)"> 4.0x - 5.0x
+                                  </td>
+                                  <td [class.highlight]="isInSegment(3, scoreCardData?.totaldebtebitda)"> 3.0x - 4.0x
+                                  </td>
+                                  <td [class.highlight]="isInSegment(4, scoreCardData?.totaldebtebitda)">2.0x - 3.0x
+                                  </td>
+                                  <td [class.highlight]="isInSegment(5, scoreCardData?.totaldebtebitda)">
+                                      < 2.0x </td>
+                                  <td>{{scoreCardData?.totaldebtebitda | number: '1.1-1'}} </td>
+                                  <td>{{scoreCardData?.factorweight | number: '1.1-1'}}%</td>
+                              </tr>
+                              <tr>
+  
+                                  <td class="left" style="vertical-align:middle"><b>VI) Current Ratio</b> <span style="font-style:italic"> (Last historical year)</span>
+                                  </td>
+                                  <td style="font-style:italic"> {{scoreCardData1?.currentratio | number: '1.1-1'}}x</td>
+                                  <td [class.highlight]="isInSegment(1, scoreCardData?.currentratio)">
+                                      < 0.5x</td>
+                                  <td [class.highlight]="isInSegment(2, scoreCardData?.currentratio)">0.5x - 1.0x</td>
+                                  <td [class.highlight]="isInSegment(3, scoreCardData?.currentratio)"> 1.0x - 1.5x
+                                  </td>
+                                  <td [class.highlight]="isInSegment(4, scoreCardData?.currentratio)">1.5x - 2.0x
+                                  </td>
+                                  <td [class.highlight]="isInSegment(5, scoreCardData?.currentratio)"> > 2.0x
+                                  </td>
+                                  <td>{{scoreCardData?.currentratio | number: '1.1-1'}} </td>
+                                  <td>{{scoreCardData?.factorweight | number: '1.1-1'}}%</td>
+                              </tr>
+                              <tr>
+  
+                                  <td class="left" style="vertical-align:middle"><b>VII) Capex as % of Revenue</b> <span style="font-style:italic"> (Avg. of last 2
+                                      years)</span></td>
+                                  <td style="font-style:italic">{{scoreCardData1?.capexpercent | number: '1.1-1'}}%</td>
+                                  <td [class.highlight]="isInSegment(1, scoreCardData?.capexpercent)"> > 20.0%
+                                  </td>
+                                  <td [class.highlight]="isInSegment(2, scoreCardData?.capexpercent)">15.0% - 20.0%
+                                  </td>
+                                  <td [class.highlight]="isInSegment(3, scoreCardData?.capexpercent)">10.0% - 15.0%
+                                  </td>
+                                  <td [class.highlight]="isInSegment(4, scoreCardData?.capexpercent)">5.0% - 10.0%
+                                  </td>
+                                  <td [class.highlight]="isInSegment(5, scoreCardData?.capexpercent)">
+                                      < 5.0% </td>
+                                  <td>{{scoreCardData?.capexpercent | number: '1.1-1'}} </td>
+                                  <td>{{scoreCardData?.factorweight | number: '1.1-1'}}%</td>
+                              </tr>
+  
+                              <tr>
+  
+                                  <td class="left" style="vertical-align:middle"><b>VIII) Return on Assets </b> <span style="font-style:italic"> (Last historical year)</span>
+                                  </td>
+                                  <td style="font-style:italic"> {{scoreCardData1?.returnassets | number: '1.1-1'}}%</td>
+  
+                                  <td [class.highlight]="isInSegment(1, scoreCardData?.returnassets)">
+                                      < 2.0% </td>
+                                  <td [class.highlight]="isInSegment(2, scoreCardData?.returnassets)">2.0% - 4.0% </td>
+                                  <td [class.highlight]="isInSegment(3, scoreCardData?.returnassets)">4.0% - 6.0% </td>
+                                  <td [class.highlight]="isInSegment(4, scoreCardData?.returnassets)"> 6.0% - 8.0% </td>
+                                  <td [class.highlight]="isInSegment(5, scoreCardData?.returnassets)"> > 8.0%
+                                  </td>
+                                  <td> {{scoreCardData?.returnassets | number: '1.1-1'}} </td>
+                                  <td> {{scoreCardData?.factorweight | number: '1.1-1'}}% </td>
+  
+                              </tr>
+  
+                              <tr>
+  
+                                  <td class="left" style="vertical-align:middle"><b> IX) Return on Equity</b> <span style="font-style:italic"> (Last historical year)</span>
+                                  </td>
+                                  <td style="font-style:italic">{{scoreCardData1?.returnequity | number: '1.1-1'}}%</td>
+                                  <td [class.highlight]="isInSegment(1, scoreCardData?.returnequity)">
+                                      < 5.0% </td>
+                                  <td [class.highlight]="isInSegment(2, scoreCardData?.returnequity)">5.0% - 10.0%
+                                  </td>
+                                  <td [class.highlight]="isInSegment(3, scoreCardData?.returnequity)">10.0% - 15.0%
+                                  </td>
+                                  <td [class.highlight]="isInSegment(4, scoreCardData?.returnequity)"> 15.0% - 20.0%
+                                  </td>
+                                  <td [class.highlight]="isInSegment(5, scoreCardData?.returnequity)"> > 20.0%
+                                  </td>
+                                  <td> {{scoreCardData?.returnequity | number: '1.1-1'}} </td>
+                                  <td> {{scoreCardData?.factorweight | number: '1.1-1'}}% </td>
+                              </tr>
+  
+  
+                              <tr >
+  
+                                  <td class="left" style="vertical-align:middle"><b> X) Solvency Ratio</b> <span style="font-style:italic"> (Avg. of last 2 years)</span>
+                                  </td>
+                                  <td style="font-style:italic">{{scoreCardData1?.solvencyratio | number: '1.1-1'}}%</td>
+  
+                                  <td [class.highlight]="isInSegment(1, scoreCardData?.solvencyratio)">
+                                      < 5.0% </td>
+                                  <td [class.highlight]="isInSegment(2, scoreCardData?.solvencyratio)">5.0% - 10.0%
+                                  </td>
+                                  <td [class.highlight]="isInSegment(3, scoreCardData?.solvencyratio)">10.0% - 15.0%
+                                  </td>
+                                  <td [class.highlight]="isInSegment(4, scoreCardData?.solvencyratio)"> 15.0% - 20.0%
+                                  </td>
+                                  <td [class.highlight]="isInSegment(5, scoreCardData?.solvencyratio)"> > 20.0%
+                                  </td>
+                                  <td> {{scoreCardData?.solvencyratio | number: '1.1-1'}} </td>
+                                  <td> {{scoreCardData?.factorweight | number: '1.1-1'}}% </td>
+                              </tr>
+                              <tr style="border:3px dashed black;background:light-blue">
+  
+                                  <td class="left border-left-top-bottom" colspan="3" style="vertical-align:middle;font-weight:bold"> RMI Insights Proprietary Overall Financial Health Score
+  
+                                  </td>
+                                  
+                                  <td class=" border-top-bottom" ></td>
+                                  <td class=" border-top-bottom"></td>
+                                  <td class=" border-top-bottom" ></td>
+                                  <td class=" border-top-bottom" ></td>
+                                  <td class=" border-top-bottom" style="font-weight:bold;"> {{sumProduct | number: '1.1-1'}} </td>
+                                  <td class=" border-right-top-bottom"style="font-weight:bold;"> {{scoreCardData?.factorweight*10 | number: '1.1-1'}}% </td>
+                              </tr>
+                              
+                              
+                              
+                              
+                          </thead>
+                      </table>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+
+</ng-template>
+
+
+

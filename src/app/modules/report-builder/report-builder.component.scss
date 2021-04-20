@@ -225,3 +225,56 @@
 }
 //Valuations CSS End
 
+// Score Card CSS Start
+
+.score-card{
+  .left{
+    text-align:left !important;
+    //padding:0px !important;
+    font-size: 16px;
+    font-weight: 400;
+    font-family: Roboto,"Helvetica Neue",sans-serif;
+  }
+  
+  td {
+      padding-right:0px !important;
+      font-size: 16px;
+    font-weight: 400;
+    border-top: 1px none #dee2e6;
+    font-family: Roboto,"Helvetica Neue",sans-serif;
+    }
+  
+    .highlight{
+      font-weight: bold;
+      background: lightblue;
+      border: 1px solid black;
+    
+    
+    }
+    
+  
+  .tablesorter{
+  border-collapse:separate;
+    border-spacing: 0 0.75em;
+  }
+  .border-top-bottom{
+  border-top: 3px dashed black;
+  border-bottom: 3px dashed black;
+  background:lightblue;
+  }
+  
+  .border-left-top-bottom{
+  border-left: 3px dashed black;
+  border-top: 3px dashed black;
+  border-bottom: 3px dashed black;
+  background:lightblue;
+  }
+  .border-right-top-bottom{
+  border-right: 3px dashed black;
+  border-top: 3px dashed black;
+  border-bottom: 3px dashed black;
+  background:lightblue;
+  }
+}
+
+//Score Card CSS End

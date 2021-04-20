@@ -10,6 +10,7 @@ import html2canvas from 'html2canvas';
 import { LoadingPopupComponent } from '../loading-popup/loading-popup.component';
 import { MatDialog } from '@angular/material';
 import { AuthService } from 'src/app/auth.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 
 export interface PLElement {
@@ -45,7 +46,8 @@ export class ReportBuilderComponent implements OnInit {
     private apiService: RMIAPIsService,
     public authService: AuthService,
     private dialog: MatDialog,
-    public reportService: ReportBuilderService
+    public reportService: ReportBuilderService,
+    private sanitizer: DomSanitizer
   ) {}
 
   financialObj = new Map();
@@ -79,6 +81,7 @@ export class ReportBuilderComponent implements OnInit {
 
   @ViewChild('imagecanvas', { static: false }) imagecanvas: ElementRef;
   @ViewChild('imagecover', { static: false }) imagecover: ElementRef;
+  @ViewChild('imageOrganizational', { static: false }) imageOrganizational: ElementRef;
 
   filteredOptions: Observable<any>;
   allCompanies = [];
@@ -98,6 +101,8 @@ export class ReportBuilderComponent implements OnInit {
 
   showCoverImage = false;
 
+  showOrganizationalLogo = false;
+
   dcf;
   @ViewChild('firstBlock', { static: false }) firstBlock: ElementRef;
   valuationSummary;
@@ -105,6 +110,8 @@ export class ReportBuilderComponent implements OnInit {
   unleveredFreeCashFlow: ElementRef;
   @ViewChild('valuations', { static: false }) valuations: ElementRef;
   @ViewChild('valuationSummary', { static: false }) valSummary: ElementRef;
+  @ViewChild('creditScoreCard', { static: false }) creditScoreCard: ElementRef;
+
 
   // reportTitle = "";
   nickname;
@@ -124,6 +131,16 @@ export class ReportBuilderComponent implements OnInit {
     );
 
     this.loadCompanies();
+
+    this.apiService.getLogo(this.urlConfig.GetLogoAPI()+"hgjdkd@rmiinsights.com").subscribe( (res : File) => {
+      console.log("Succesfully fetched the logo", res)
+      if(res.type != "text/html"){
+        // this.file = res;
+        this.organizationLogo = this.sanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(res))
+      }
+    }, error => {
+      console.log("Failed to fetch the logo", error)
+    })
 
     }
     else{
@@ -200,6 +217,18 @@ export class ReportBuilderComponent implements OnInit {
     );
   }
 
+  isInSegment(lowValue, actualValue){
+    return actualValue == lowValue ? true : false;
+  }
+
+
+  scoreCardData
+  scoreCardData1
+  showScoreCard = false;
+  sumProduct
+
+  organizationLogo;
+
   async buildReport() {
 
     const selectionExists = this.reportSelection.find( r => r.isSelected == true)
@@ -217,18 +246,102 @@ export class ReportBuilderComponent implements OnInit {
     canvas.getContext('2d').drawImage(this.imagecanvas.nativeElement, 0, 0);
     const imagermi = canvas.toDataURL('image/png', 1);
 
+    let organizationLogo;
+
+    if(this.organizationLogo){
+      var canvas = document.createElement('canvas');
+    canvas.width = this.imageOrganizational.nativeElement.width;
+    canvas.height = this.imageOrganizational.nativeElement.height;
+    canvas.getContext('2d').drawImage(this.imageOrganizational.nativeElement, 0, 0);
+    organizationLogo = canvas.toDataURL('image/png', 1);
+    }
+
     await this.initScenario(this.selectedScenario);
+
+    this.showScoreCard = true;
+
     this.showValuations = true;
 
     this.showCoverImage = true;
 
-    setTimeout(() => {
-      html2canvas(this.imagecover.nativeElement, {scale: 5}).then((canvas1) => {
-        this.coverImage = canvas1.toDataURL();
-        this.showCoverImage = false;
-        this.exportToPdf1(imagermi,this.coverImage);
-      }); 
+    this.showOrganizationalLogo = true;
+
+    let logo;
+
+    // try {
+    //   const res  = await this.apiService.getLogo(this.urlConfig.GetLogoAPI()+"hgjdkd@rmiinsights.com").toPromise<Blob>();
+    //   console.log("Succesfully fetched the logo", res)
+    //   if(res.type != "text/html"){
+    //     // this.file = res;
+    //     logo = this.sanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(res))
+    //   }
+    // } 
+    // catch (error) {
+      
+    // }
+
+    // if(logo){
+    //   try {
+    //     this.organizationLogo = await this.getBase64ImageFromURL(logo)
+    //   } catch (error) {
+        
+    //   }
+  
+    // }
+
+    setTimeout(async () => {
+
+      let creditScoreCard; 
+      try {
+        const res = await this.apiService.getData(this.urlConfig.getCreditScoreCardAPI() + this.selectedCompany.compName).toPromise();
+        console.log("RES", res);
+        this.scoreCardData=res[0];
+        this.scoreCardData1=res[1];
+        this.sumProduct=(((this.scoreCardData.revenuecagr)*(this.scoreCardData.factorweight/100))+
+        ((this.scoreCardData.avggrossmargin)*(this.scoreCardData.factorweight/100))+
+        ((this.scoreCardData.avgebitdamargin)*(this.scoreCardData.factorweight/100))+
+        ((this.scoreCardData.totaldebtebitda)*(this.scoreCardData.factorweight/100))
+        +((this.scoreCardData.currentratio)*(this.scoreCardData.factorweight/100))+
+        ((this.scoreCardData.capexpercent)*(this.scoreCardData.factorweight/100))+
+        ((this.scoreCardData.returnassets)*(this.scoreCardData.factorweight/100))
+        +((this.scoreCardData.returnequity)*(this.scoreCardData.factorweight/100))+
+        ((this.scoreCardData.solvencyratio)*(this.scoreCardData.factorweight/100))+
+        ((this.scoreCardData.ebitdacagr)*(this.scoreCardData.factorweight/100)));
+        console.log("socre",this.sumProduct);
+
+      } catch (error) {
+        console.log(error)
+      }
+    
+      setTimeout(() => {
+        html2canvas(this.creditScoreCard.nativeElement, {scale: 2}).then((can) => {
+          creditScoreCard = can.toDataURL(),
+          this.showScoreCard = false
+          html2canvas(this.imagecover.nativeElement, {scale: 3}).then((canvas1) => {
+            this.coverImage = canvas1.toDataURL();
+            this.showCoverImage = false;
+
+            if(organizationLogo){
+              this.exportToPdf1(imagermi,this.coverImage, creditScoreCard, organizationLogo);
+            }
+            else{
+              this.exportToPdf1(imagermi,this.coverImage, creditScoreCard);
+            }
+          }); 
+          // this.exportToPdf1(imagermi,this.coverImage, creditScoreCard);
+        }); 
+      });
+
     }, 1500);
+    
+
+    // setTimeout(() => {
+    //   html2canvas(this.imagecover.nativeElement, {scale: 2}).then((canvas1) => {
+    //     this.coverImage = canvas1.toDataURL();
+    //     this.showCoverImage = false;
+    //     this.exportToPdf1(imagermi,this.coverImage);
+    //   }); 
+    // }, 1500);
 
     // setTimeout(() => {
     //   this.exportToPdf1(imagermi,imagermicover);
@@ -429,26 +542,26 @@ export class ReportBuilderComponent implements OnInit {
     }
   }
 
-  exportToPdf1(imagermi,imagecover) {
+  exportToPdf1(imagermi,imagecover, creditScoreCard, organizationLogo?) {
     const content = [];
 
-    content.push({ 
-      image: imagermi, width: 130, height: 60, pageOrientation: "landscape",
-  })
-    content.push({
-      text: "Valuations",
-      style: 'header',
-      // pageOrientation: "landscape",
-      // pageBreak: 'after',
-    })
+    // content.push({ 
+    //   image: imagermi, width: 130, height: 90, pageOrientation: "landscape",
+    // })
+    // content.push({
+    //   text: "Valuations",
+    //   style: 'header',
+    //   // pageOrientation: "landscape",
+    //   // pageBreak: 'after',
+    // })
 
-    content.push({
-      text:
-        this.selectedCompany.compName + " - " + "Scenario "  + this.selectedScenario,
-        style: 'subheader',
-        pageOrientation: "portrait",
-    })
-    html2canvas(this.firstBlock.nativeElement, {scale: 5}).then((canvas1) => {
+    // content.push({
+    //   text:
+    //     this.selectedCompany.compName + " - " + "Scenario "  + this.selectedScenario,
+    //     style: 'subheader',
+    //     pageOrientation: "portrait",
+    // })
+    html2canvas(this.firstBlock.nativeElement, {scale: 2}).then((canvas1) => {
       const canvasData1 = canvas1.toDataURL();
       content.push({
         image: canvasData1,
@@ -459,7 +572,7 @@ export class ReportBuilderComponent implements OnInit {
       });
 
 
-      html2canvas(this.unleveredFreeCashFlow.nativeElement, {scale: 5}).then((canvas2) => {
+      html2canvas(this.unleveredFreeCashFlow.nativeElement, {scale: 2}).then((canvas2) => {
         content.push({
           image: canvas2.toDataURL(),
           width: 870,
@@ -471,7 +584,7 @@ export class ReportBuilderComponent implements OnInit {
         // this.unleveredFreeCashFlow.nativeElement.style.display = "none"
 
 
-        html2canvas(this.valuations.nativeElement,  {scale: 5}).then((canvas3) => {
+        html2canvas(this.valuations.nativeElement,  {scale: 2}).then((canvas3) => {
           content.push({
             image: canvas3.toDataURL(),
             width: 870,
@@ -482,7 +595,7 @@ export class ReportBuilderComponent implements OnInit {
 
           // this.valuations.nativeElement.style.display = "none"
 
-          html2canvas(this.valSummary.nativeElement,  {scale: 5}).then((canvas4) => {
+          html2canvas(this.valSummary.nativeElement,  {scale: 2}).then((canvas4) => {
             content.push({
               image: canvas4.toDataURL(),
               width: 400,
@@ -495,7 +608,7 @@ export class ReportBuilderComponent implements OnInit {
 
             // this.valSummary.nativeElement.style.display = "none"
 
-            // this.showValuations = false;
+            this.showValuations = false;
             if (
               this.reportSelection &&
               this.selectedCompany &&
@@ -508,13 +621,41 @@ export class ReportBuilderComponent implements OnInit {
                 this.selectedScenario,
                 imagermi,
                 content,
-		imagecover,
+		            imagecover,
+                creditScoreCard,
+                organizationLogo
               );
             }
 
           });
         });
       });
+    });
+  }
+
+  getBase64ImageFromURL(url) {
+    return new Promise((resolve, reject) => {
+      var img = new Image();
+      img.setAttribute("crossOrigin", "anonymous");
+
+      img.onload = () => {
+        var canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+
+        var dataURL = canvas.toDataURL("image/png");
+
+        resolve(dataURL);
+      };
+
+      img.onerror = error => {
+        reject(error);
+      };
+
+      img.src = url;
     });
   }
 

@@ -317,6 +317,21 @@
             </ng-template>
           </td>
         </tr>
+		
+		<tr>
+          <td class="normalClass leftAlign">
+            (+/-) Net Interest Income / (Expense)
+          </td>
+          <td class="normalClass rightAlign" *ngFor="let rev of financials">
+            <ng-template [ngIf]="rev['netIterestExpense'] >= 0">
+              $ {{ rev['netIterestExpense'] | number: '1.0-0' }}
+            </ng-template>
+            <ng-template [ngIf]="rev['netIterestExpense'] < 0">
+              ($ {{ -rev['netIterestExpense'] | number: '1.0-0' }})
+            </ng-template>
+          </td>
+        </tr>
+
 
 		<tr>
           <td class="normalClass leftAlign">

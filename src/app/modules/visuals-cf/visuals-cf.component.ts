@@ -452,7 +452,7 @@ export class VisualsCfComponent implements OnInit {
                             that.maxValue = this.series.yAxis.max;
                             that.selectedChart = 'dividend-paid';
                             that.selectedYear = this.category;
-                            that.modalDefaultValue = this.y;
+                            that.modalDefaultValue = +Math.round(this.y).toFixed(0);
                             that.openDialog();
                           },
                         },
@@ -550,7 +550,7 @@ export class VisualsCfComponent implements OnInit {
                             that.maxValue = this.series.yAxis.max;
                             that.selectedChart = 'capex';
                             that.selectedYear = this.category;
-                            that.modalDefaultValue = this.y;
+                            that.modalDefaultValue = +Math.round(this.y).toFixed(0);
                             that.openDialog();
                           },
                         },
@@ -646,7 +646,7 @@ export class VisualsCfComponent implements OnInit {
                             that.maxValue = this.series.yAxis.max;
                             that.selectedChart = 'assest-sales';
                             that.selectedYear = this.category;
-                            that.modalDefaultValue = this.y;
+                            that.modalDefaultValue = +Math.round(this.y).toFixed(0);
                             that.openDialog();
                           },
                         },
@@ -734,7 +734,7 @@ export class VisualsCfComponent implements OnInit {
                             that.maxValue = this.series.yAxis.max;
                             that.selectedChart = 'other-investment';
                             that.selectedYear = this.category;
-                            that.modalDefaultValue = this.y;
+                            that.modalDefaultValue = +Math.round(this.y).toFixed(0);
                             that.openDialog();
                           },
                         },

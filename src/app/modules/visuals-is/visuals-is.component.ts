@@ -541,7 +541,7 @@ export class VisualsISComponent implements OnInit {
                             that.maxValue = this.series.yAxis.max;
                             that.selectedChart = 'revenue-growth';
                             that.selectedYear = this.category;
-                            that.modalDefaultValue = this.y;
+                            that.modalDefaultValue = +Math.round(this.y).toFixed(0);
                             that.openDialog();
                           },
                         },
@@ -648,7 +648,7 @@ export class VisualsISComponent implements OnInit {
                             that.maxValue = this.series.yAxis.max;
                             that.selectedChart = 'cogs-percent';
                             that.selectedYear = this.category;
-                            that.modalDefaultValue = this.y;
+                            that.modalDefaultValue = +Math.round(this.y).toFixed(0);
                             that.openDialog();
                           },
                         },
@@ -758,7 +758,7 @@ export class VisualsISComponent implements OnInit {
                             that.maxValue = this.series.yAxis.max;
                             that.selectedChart = 'sga-percent';
                             that.selectedYear = this.category;
-                            that.modalDefaultValue = this.y;
+                            that.modalDefaultValue = +Math.round(this.y).toFixed(0);
                             that.openDialog();
                           },
                         },
@@ -863,7 +863,7 @@ export class VisualsISComponent implements OnInit {
                             that.maxValue = this.series.yAxis.max;
                             that.selectedChart = 'dna-percent';
                             that.selectedYear = this.category;
-                            that.modalDefaultValue = this.y;
+                            that.modalDefaultValue = +Math.round(this.y).toFixed(0);
                             that.openDialog();
                           },
                         },
@@ -975,7 +975,7 @@ export class VisualsISComponent implements OnInit {
                             that.maxValue = this.series.yAxis.max;
                             that.selectedChart = 'oincome-expense-percent';
                             that.selectedYear = this.category;
-                            that.modalDefaultValue = this.y;
+                            that.modalDefaultValue = +Math.round(this.y).toFixed(0);
                             that.openDialog();
                           },
                         },
@@ -1081,7 +1081,7 @@ export class VisualsISComponent implements OnInit {
                             that.maxValue = undefined;
                             that.selectedChart = 'net-interest-expense';
                             that.selectedYear = this.category;
-                            that.modalDefaultValue = this.y;
+                            that.modalDefaultValue = +Math.round(this.y).toFixed(0);
                             that.openDialog();
                           },
                         },

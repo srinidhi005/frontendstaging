@@ -73,13 +73,13 @@
             Cash Equivalents
           </td>
           <td class="normalClass rightAlign" *ngFor="let rev of financials">
-            <ng-template [ngIf]="rev['totalRevenue'] >= 0">
-              $ {{ rev['totalRevenue'] | number: '1.0-0'}}
+            <ng-template [ngIf]="rev['cashequivalents'] >= 0">
+              $ {{ rev['cashequivalents'] | number: '1.0-0'}}
             </ng-template>
-            <ng-template [ngIf]="rev['totalRevenue'] < 0">
-              ($ {{ -(rev['totalRevenue']) | number: '1.0-0'}})
+            <ng-template [ngIf]="rev['cashequivalents'] < 0">
+              ($ {{ -(rev['cashequivalents']) | number: '1.0-0'}})
             </ng-template>
-            $ {{ rev['cashequivalents'] | number: '1.0-0'}}
+           
           </td>
         </tr>
 

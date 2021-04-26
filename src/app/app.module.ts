@@ -76,10 +76,10 @@ constructor() {
      const el = document.createElement('script')
     el.onload = () => {
       var chargebeeInstance = Chargebee.init({
-        site: "rmiinsights"
+        site: "rmiinsights-test"
       });
       let cbInstance = Chargebee.getInstance()
-      
+     
     }
     el.setAttribute('src', 'https://js.chargebee.com/v2/chargebee.js')
     document.body.appendChild(el)

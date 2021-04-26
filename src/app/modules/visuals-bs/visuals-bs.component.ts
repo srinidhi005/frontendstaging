@@ -483,7 +483,7 @@ export class VisualsBsComponent implements OnInit {
                             that.maxValue = this.series.yAxis.max;
                             that.selectedChart = 'daily-sales';
                             that.selectedYear = this.category;
-                            that.modalDefaultValue = this.y;
+                            that.modalDefaultValue = +Math.round(this.y).toFixed(0);
                             that.openDialog();
                           },
                         },
@@ -581,7 +581,7 @@ export class VisualsBsComponent implements OnInit {
                             that.maxValue = this.series.yAxis.max;
                             that.selectedChart = 'inventory-days';
                             that.selectedYear = this.category;
-                            that.modalDefaultValue = this.y;
+                            that.modalDefaultValue = +Math.round(this.y).toFixed(0);
                             that.openDialog();
                           },
                         },
@@ -669,7 +669,7 @@ export class VisualsBsComponent implements OnInit {
                             that.maxValue = this.series.yAxis.max;
                             that.selectedChart = 'other-current-assets';
                             that.selectedYear = this.category;
-                            that.modalDefaultValue = this.y;
+                            that.modalDefaultValue = +Math.round(this.y).toFixed(0);
                             that.openDialog();
                           },
                         },
@@ -760,7 +760,7 @@ export class VisualsBsComponent implements OnInit {
                             that.maxValue = this.series.yAxis.max;
                             that.selectedChart = 'dasy-payable-outstanding';
                             that.selectedYear = this.category;
-                            that.modalDefaultValue = this.y;
+                            that.modalDefaultValue = +Math.round(this.y).toFixed(0);
                             that.openDialog();
                           },
                         },
@@ -851,7 +851,7 @@ export class VisualsBsComponent implements OnInit {
                             that.maxValue = this.series.yAxis.max;
                             that.selectedChart = 'accrued-liabilities';
                             that.selectedYear = this.category;
-                            that.modalDefaultValue = this.y;
+                            that.modalDefaultValue = +Math.round(this.y).toFixed(0);
                             that.openDialog();
                           },
                         },
@@ -939,7 +939,7 @@ export class VisualsBsComponent implements OnInit {
                             that.maxValue = this.series.yAxis.max;
                             that.selectedChart = 'other-current-liabilities';
                             that.selectedYear = this.category;
-                            that.modalDefaultValue = this.y;
+                            that.modalDefaultValue = +Math.round(this.y).toFixed(0);
                             that.openDialog();
                           },
                         },

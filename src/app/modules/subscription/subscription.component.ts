@@ -22,12 +22,13 @@ export class SubscriptionComponent implements OnInit {
     cart.replaceProduct(product);
     cart.proceedToCheckout();
   }
+ 
 
 Core() {
     // see https://www.chargebee.com/checkout-portal-docs/drop-in-tutorial.html#simulating-drop-in-script-functionality-with-your-button
      let cbInstance = Chargebee.getInstance();
     let cart = cbInstance.getCart();
-    let product = cbInstance.initializeProduct("core-plan");
+    let product = cbInstance.initializeProduct("test_demo");
     cart.replaceProduct(product);
     cart.proceedToCheckout();
   }

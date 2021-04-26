@@ -68,7 +68,9 @@ export class PLMetricsComponent implements OnInit {
     '(+) Depreciation & Amortization (D&A)',
     'EBITDA',
     'EBITDA Margin',
-    '(-) Net Interest/Other Income Expense',
+	'(+/-)Net Interest (Expense)',
+    '(+/-)Other Income (Expense)',
+	
     'EBT',
     'EBT Margin',
     '(-) Taxes',
@@ -199,13 +201,21 @@ export class PLMetricsComponent implements OnInit {
                       EBITDA:
                         '$ ' + formatNumber(Number(v.EBITDA), 'en-US', '1.0-0'),
                       'EBITDA Margin': v.EBITDAMargin + '%',
-                      '(-) Net Interest/Other Income Expense':
+                      '(+/-) Net Interest (Expense)':
                         '$ ' +
                         formatNumber(
-                          Number(v.netIterestExpense),
+                          Number(v.otherIncome),
                           'en-US',
                           '1.0-0'
                         ),
+						'(+/-) Other Income (Expense)':
+                        '$ ' +
+                        formatNumber(
+                          Number(v.otherIncome),
+                          'en-US',
+                          '1.0-0'
+                        ),
+						
                       EBT: '$ ' + formatNumber(Number(v.EBT), 'en-US', '1.0-0'),
                       'EBT Margin': v.EBTMargin + '%',
                       '(-) Taxes':
@@ -319,7 +329,14 @@ export class PLMetricsComponent implements OnInit {
       this.prepareJsonForExport(
         keys,
         'netIterestExpense',
-        '(-) Net Interest/Other Income Expense'
+        '(+/-) Net Interest (Expense)'
+      )
+    );
+	data.push(
+      this.prepareJsonForExport(
+        keys,
+        'otherIncome',
+        '(+/-) Other Income (Expense)'
       )
     );
     data.push(this.prepareJsonForExport(keys, 'EBT', 'EBT'));
@@ -380,6 +397,7 @@ export class PLMetricsComponent implements OnInit {
     let EBITDA = [];
     let EBITDAMargin = [];
     let NIE = [];
+	let OIE = [];
     let EBT = [];
     let EBTMargin = [];
     let taxes = [];
@@ -398,7 +416,8 @@ export class PLMetricsComponent implements OnInit {
       DA.push(obj['(+) Depreciation & Amortization (D&A)']);
       EBITDA.push(obj['EBITDA']);
       EBITDAMargin.push(obj['EBITDA Margin']);
-      NIE.push(obj['(-) Net Interest/Other Income Expense']);
+      NIE.push(obj['(+/-) Net Interest (Expense)']);
+	  OIE.push(obj['(+/-) Other Income (Expense)']);
       EBT.push(obj['EBT']);
       EBTMargin.push(obj['EBT Margin']);
       taxes.push(obj['(-) Taxes']);
@@ -417,7 +436,8 @@ export class PLMetricsComponent implements OnInit {
     DA.unshift('(+) Depreciation & Amortization (D&A)');
     EBITDA.unshift('EBITDA');
     EBITDAMargin.unshift('EBITDA Margin');
-    NIE.unshift('(-) Net Interest/Other Income Expense');
+    NIE.unshift('(+/-) Net Interest(Expense)');
+	OIE.unshift('(+/-) Other Income (Expense)');
     EBT.unshift('EBT');
     EBTMargin.unshift('EBT Margin');
     taxes.unshift('(-) Taxes');
@@ -460,6 +480,7 @@ export class PLMetricsComponent implements OnInit {
       this.getMappedArr(EBITDA, true),
       this.getMappedArr(EBITDAMargin),
       this.getMappedArr(NIE),
+	  this.getMappedArr(OIE),
       this.getMappedArr(EBT, true),
       this.getMappedArr(EBTMargin),
       this.getMappedArr(taxes),

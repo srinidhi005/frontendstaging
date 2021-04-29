@@ -824,7 +824,8 @@ export class VisualsBsComponent implements OnInit {
 				  },
                   plotOptions: {
                     series: {
-                      stickyTracking: false,
+						
+                      ...seriesOption,
                       dragDrop: { draggableY: true, dragMaxY: 99, dragMinY: 0 },
                       point: {
                         events: {
@@ -886,7 +887,7 @@ export class VisualsBsComponent implements OnInit {
                   legend: false,
                 };
                 this.OCLOptions = {
-                  chart: { type: 'spline', animation: false },
+                  chart: { type: 'areaspline', animation: false },
                   title: { text: 'Other Current Liabilities (% of COGS)' },
                   yAxis: {
                     title: { text: 'As % of COGS',
@@ -912,7 +913,7 @@ export class VisualsBsComponent implements OnInit {
 				  },
                   plotOptions: {
                     series: {
-                      stickyTracking: false,
+                      ...seriesOption,
                       dragDrop: { draggableY: true, dragMaxY: 99, dragMinY: 0 },
                       point: {
                         events: {
@@ -945,7 +946,7 @@ export class VisualsBsComponent implements OnInit {
                         },
                       },
                     },
-                    spline: {
+                    areaspline: {
                       stacking: 'normal',
                       minPointLength: 2,
                       colorByPoint: true,
@@ -1105,18 +1106,19 @@ export class VisualsBsComponent implements OnInit {
     this.TCAOptions = {
       chart: { type: 'column', animation: false },
       title: { text: 'Total Current Assets (Excluding Cash)' },
-      yAxis: { title: { text: 'USD',
-	  style: {
+      yAxis: { title: { text: 'USD (in billions)',
+	style: {
                         fontSize: '14px',
-		      },
-
-		labels: {
+                      }  
+	  },
+				labels: {
+					formatter: function() {
+          return this.value /1000  + 'B';
+        },
                       style: {
                         fontSize: '13px',
                       }
-                    } 
-	  }, 
-	  
+                    },
 	  },
       xAxis: { categories: this.yearsArray,
 	labels: {
@@ -1159,12 +1161,15 @@ export class VisualsBsComponent implements OnInit {
     this.TAOptions = {
       chart: { type: 'column', animation: false },
       title: { text: 'Total Assets' },
-      yAxis: { title: { text: 'USD',
-		style: {
+      yAxis: { title: { text: 'USD (in billions)',
+	style: {
                         fontSize: '14px',
                       }  
 	  },
 				labels: {
+					formatter: function() {
+          return this.value /1000  + 'B';
+        },
                       style: {
                         fontSize: '13px',
                       }
@@ -1210,12 +1215,15 @@ export class VisualsBsComponent implements OnInit {
     this.TCLOptions = {
       chart: { type: 'column', animation: false },
       title: { text: 'Total Current Liabilities' },
-      yAxis: { title: { text: 'USD',
+      yAxis: { title: { text: 'USD (in billions)',
 	  style: {
                         fontSize: '14px',
                       }  
 	  },
 				labels: {
+					formatter: function() {
+          return this.value /1000  + 'B';
+        },
                       style: {
                         fontSize: '13px',
                       }
@@ -1261,12 +1269,15 @@ export class VisualsBsComponent implements OnInit {
     this.TLOptions = {
       chart: { type: 'column', animation: false },
       title: { text: 'Total Liabilities' },
-      yAxis: { title: { text: 'USD',
+      yAxis: { title: { text: 'USD (in billions)',
 	  style: {
                         fontSize: '14px',
                       }
 					  },
 		labels: {
+			formatter: function() {
+          return this.value /1000  + 'B';
+        },
                       style: {
                         fontSize: '13px',
                       }
@@ -1313,17 +1324,19 @@ export class VisualsBsComponent implements OnInit {
     this.TSEOptions = {
       chart: { type: 'column', animation: false },
       title: { text: 'Total Assets (Excluding Cash)' },
-      yAxis: { title: { text: 'USD',
+      yAxis: { title: { text: 'USD (in billions)',
 		style: {
                         fontSize: '14px',
-                },
-						labels: {
+                      }  
+	  },
+				labels: {
+					formatter: function() {
+          return this.value /1000  + 'B';
+        },
                       style: {
                         fontSize: '13px',
                       }
                     },
-				},
-
 	  },
       xAxis: { categories: this.yearsArray,
 		labels: {
@@ -1365,12 +1378,15 @@ export class VisualsBsComponent implements OnInit {
     this.TLSEOptions = {
       chart: { type: 'column', animation: false },
       title: { text: 'Total Liabilities & Shareholders Equity' },
-      yAxis: { title: { text: 'USD',
+      yAxis: { title: { text: 'USD (in billions)',
 	  style: {
                         fontSize: '14px',
                       }  
 	  },
 		labels: {
+			formatter: function() {
+          return this.value /1000  + 'B';
+        },
                       style: {
                         fontSize: '13px',
                       }

@@ -91,9 +91,9 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.imgLink.nativeElement.src = this.authService.userPicture;
-    this.imgLink.nativeElement.style.height = '180px';
-    this.imgLink.nativeElement.style.width = '180px';
+    // this.imgLink.nativeElement.src = this.authService.userPicture;
+    // this.imgLink.nativeElement.style.height = '180px';
+    // this.imgLink.nativeElement.style.width = '180px';
   }
 
   clickOnFileInput(fileInput) {
@@ -101,12 +101,12 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   }
 
   checkForAccessibility(){
-    if(this.authService.currentUserRoles?.indexOf('Admin') >= 0 || this.authService.currentUserRoles?.indexOf('SuperAdmin') >= 0){
+    if(false && this.authService.currentUserRoles?.indexOf('Admin') >= 0 && this.authService.currentUserRoles?.indexOf('SuperAdmin') >= 0){
       this.router.navigate(['/Users']);
     }
     else{
       const message = "You need to be an Admin or Super Admin to access User Details";
-      this.excelService.showMessage(message, "Cancel", '430px', '140px')
+      this.excelService.showMessage(message, "Cancel", '450px', '140px')
     }
   }
 
@@ -156,15 +156,15 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       let image = new Image();
       image.src = this.authService.userPicture;
 
-      const _this = this;
-      image.onload = function () {
-        //Determine the Height and Width.
-        console.log(this);
+      // const _this = this;
+      // image.onload = function () {
+      //   //Determine the Height and Width.
+      //   console.log(this);
 
-        _this.imgLink.nativeElement.src = _this.authService.userPicture;
-        _this.imgLink.nativeElement.style.height = '180px';
-        _this.imgLink.nativeElement.style.width = '180px';
-      };
+      //   _this.imgLink.nativeElement.src = _this.authService.userPicture;
+      //   _this.imgLink.nativeElement.style.height = '180px';
+      //   _this.imgLink.nativeElement.style.width = '180px';
+      // };
     };
   }
 }

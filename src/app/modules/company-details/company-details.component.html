@@ -1,162 +1,177 @@
-<div class="example-container profile-page">
-  <form [formGroup]="form" (ngSubmit)="submit()">
-    <mat-card class="company-profile-section">
-      <mat-card-content>
-        <div class="row">
-          <div class="col">
-            <h2 class="title">Organization Info</h2>
-          </div>
-
-          <div class="col-3" style="text-align: right;">
-            <div class="row text-muted" *ngIf = "!logo"  style="height: 100px; cursor: pointer; border: 1px solid white; border-radius: 15px; margin: 0 18%; 
-            display: flex; align-items: center; justify-content: center; background-color: grey;" 
-            (click)="clickOnFileInput(fileInput)">
-              <span class="material-icons" style="font-size: 50px; color: black;">
-                business
-              </span>
+<ng-template  [ngIf] = "imageLoaded && authService.authServiceLoaded">
+  <div class=" example-container profile-page">
+    <div class="row">
+      <div class="col"></div>
+      <div class="col-3" style="text-align: center;">
+        <div class="row text-muted" *ngIf = "!this.excelService.organizationLogo"  style="height: 160px; cursor: pointer; border: 1px solid white; border-radius: 50px; margin: 2% 18%; 
+        display: flex; align-items: center; justify-content: center; background-color: grey;" 
+        (click)="clickOnFileInput(fileInput)">
+          <span class="material-icons" style="font-size: 50px; color: black;">
+            business
+          </span>
+        </div>
+  
+        <div class="row text-muted" *ngIf = "this.excelService.organizationLogo" style="height: 160px; cursor: pointer; border: 1px solid white; margin: 2% 18%; 
+        display: flex; align-items: center; justify-content: center;" 
+        (click)="clickOnFileInput(fileInput)">
+          <img [src]="this.excelService.organizationLogo" height="160" width="160" style="cursor: pointer;  border-radius: 50px" alt="file.name">
+        </div>
+  
+        <div class="row" style="display: flex; align-items: center; justify-content: center; margin: 10px 0;">
+          <span class="material-icons" style="cursor: pointer;" (click)="clickOnFileInput(fileInput)">
+            photo_camera
+          </span>
+        </div>
+              
+        <!-- <button mat-raised-button (click)="clickOnFileInput(fileInput)">
+          Upload this.excelService.organizationLogo
+        </button> -->
+      </div>
+      <div class="col"></div>
+    </div>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <mat-card class="company-profile-section">
+        <mat-card-content>
+          <div class="row">
+            <div class="col">
+              <h2 class="title">Organization Info</h2>
             </div>
-
-            <div class="row text-muted" *ngIf = "logo" style="height: 100px; cursor: pointer; border: 1px solid white; border-radius: 15px; margin: 0 18%; 
-            display: flex; align-items: center; justify-content: center;" 
-            (click)="clickOnFileInput(fileInput)">
-              <img [src]="logo" height="100" width="160" style="cursor: pointer;  border-radius: 15px" alt="file.name">
+          </div>
+          <div class="row">
+            
+            <input type="file" accept="image/*" style="display: none;" #fileInput (change)="pickFile($event)"/>
+          </div>
+          <div fxLayout="row" class="header">
+            <div fxLayout="row" fxFlex fxLayoutAlign="center">
+              <mat-form-field class="container-field">
+                <mat-label>Company</mat-label>
+                <input matInput formControlName="company" [(ngModel)]=company />
+                <mat-error *ngIf="form.get('company').hasError('required')">
+                  Fill User Name without special characters
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field class="container-field">
+                <mat-label>Title</mat-label>
+                <input matInput formControlName="title" [(ngModel)]=title />
+                <mat-error *ngIf="form.get('title').hasError('required')">
+                  Fill User Name without special characters
+                </mat-error>
+              </mat-form-field>
             </div>
-
-            <div class="row" style="display: flex; align-items: center; justify-content: center; margin: 10px 0;">
-              <span class="material-icons" style="cursor: pointer;" (click)="clickOnFileInput(fileInput)">
-                photo_camera
-              </span>
+          </div>
+          <div fxLayout="row" class="header">
+            <div fxLayout="row" fxFlex fxLayoutAlign="space-evenly center">
+              <mat-form-field class="container-field">
+                <mat-label>Country</mat-label>
+                <input matInput formControlName="country" placeholder="Ex. USA" [(ngModel)]=country>
+              </mat-form-field>
+              <mat-form-field class="container-field">
+                <mat-label>City</mat-label>
+                <input matInput formControlName="city" placeholder="Ex. San Francisco" [(ngModel)]=city>
+              </mat-form-field>
             </div>
-                  
-            <!-- <button mat-raised-button (click)="clickOnFileInput(fileInput)">
-              Upload Logo
-            </button> -->
           </div>
-        </div>
-        <div class="row">
-          
-          <input type="file" accept="image/*" style="display: none;" #fileInput (change)="pickFile($event)"/>
-        </div>
-        <div fxLayout="row" class="header">
-          <div fxLayout="row" fxFlex fxLayoutAlign="center">
-            <mat-form-field class="container-field">
-              <mat-label>Company</mat-label>
-              <input matInput formControlName="company" [(ngModel)]=company />
-              <mat-error *ngIf="form.get('company').hasError('required')">
-                Fill User Name without special characters
-              </mat-error>
-            </mat-form-field>
-            <mat-form-field class="container-field">
-              <mat-label>Title</mat-label>
-              <input matInput formControlName="title" [(ngModel)]=title />
-              <mat-error *ngIf="form.get('title').hasError('required')">
-                Fill User Name without special characters
-              </mat-error>
-            </mat-form-field>
+          <div fxLayout="row" class="header">
+            <div fxLayout="row" fxFlex fxLayoutAlign="space-evenly center">
+              <mat-form-field class="container-field">
+                <mat-label>State</mat-label>
+                <input matInput formControlName="state" placeholder="Ex. California" [(ngModel)]=state>
+              </mat-form-field>
+              <mat-form-field class="container-field">
+                <mat-label>Zip Code</mat-label>
+                <input matInput #postalCode maxlength="5" formControlName="zipcode" placeholder="Ex. 94105"
+                  [(ngModel)]=zipcode>
+                <mat-hint align="end">{{postalCode.value.length}} / 5</mat-hint>
+              </mat-form-field>
+            </div>
           </div>
-        </div>
-        <div fxLayout="row" class="header">
-          <div fxLayout="row" fxFlex fxLayoutAlign="space-evenly center">
-            <mat-form-field class="container-field">
-              <mat-label>Country</mat-label>
-              <input matInput formControlName="country" placeholder="Ex. USA" [(ngModel)]=country>
-            </mat-form-field>
-            <mat-form-field class="container-field">
-              <mat-label>City</mat-label>
-              <input matInput formControlName="city" placeholder="Ex. San Francisco" [(ngModel)]=city>
-            </mat-form-field>
+          <div fxLayout="row" class="header">
+            <div fxLayout="row" fxFlex fxLayoutAlign="space-evenly center">
+              <mat-form-field class="container-field">
+                <mat-label>Address</mat-label>
+                <textarea matInput formControlName="address" placeholder="Ex. 100 Main St"
+                  [(ngModel)]=address></textarea>
+              </mat-form-field>
+              <mat-form-field class="container-field">
+                <mat-label>Industry</mat-label>
+                <mat-select placeholder="{{industryInput}}" formControlName="industry">
+                  <mat-option *ngFor="let industry of industry" [value]="industry">{{industry}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="form.get('industry').hasError('required')">
+                  Industry is Required!
+                </mat-error>
+              </mat-form-field>
+            </div>
           </div>
-        </div>
-        <div fxLayout="row" class="header">
-          <div fxLayout="row" fxFlex fxLayoutAlign="space-evenly center">
-            <mat-form-field class="container-field">
-              <mat-label>State</mat-label>
-              <input matInput formControlName="state" placeholder="Ex. California" [(ngModel)]=state>
-            </mat-form-field>
-            <mat-form-field class="container-field">
-              <mat-label>Zip Code</mat-label>
-              <input matInput #postalCode maxlength="5" formControlName="zipcode" placeholder="Ex. 94105"
-                [(ngModel)]=zipcode>
-              <mat-hint align="end">{{postalCode.value.length}} / 5</mat-hint>
-            </mat-form-field>
+          <div fxLayout="row" class="header">
+            <div fxLayout="row" fxFlex fxLayoutAlign="space-evenly center">
+              <mat-form-field class="container-field">
+                <mat-label>Geography</mat-label>
+                <mat-select placeholder="{{geographyInput}}" formControlName="geography">
+                  <mat-option *ngFor="let geography of geography" [value]="geography">{{geography}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="form.get('geography').hasError('required')">
+                  geography is Required!
+                </mat-error>
+              </mat-form-field>
+  
+              <mat-form-field class="container-field">
+                <mat-label>Number of Employees</mat-label>
+                <mat-select placeholder="{{companysizeInput}}" formControlName="companysize">
+                  <mat-option *ngFor="let companysize of companysize" [value]="companysize">{{companysize}}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="form.get('companysize').hasError('required')">
+                  Company Size is Required!
+                </mat-error>
+              </mat-form-field>
+            </div>
           </div>
-        </div>
-        <div fxLayout="row" class="header">
-          <div fxLayout="row" fxFlex fxLayoutAlign="space-evenly center">
-            <mat-form-field class="container-field">
-              <mat-label>Address</mat-label>
-              <textarea matInput formControlName="address" placeholder="Ex. 100 Main St"
-                [(ngModel)]=address></textarea>
-            </mat-form-field>
-            <mat-form-field class="container-field">
-              <mat-label>Industry</mat-label>
-              <mat-select placeholder="{{industryInput}}" formControlName="industry">
-                <mat-option *ngFor="let industry of industry" [value]="industry">{{industry}}</mat-option>
-              </mat-select>
-              <mat-error *ngIf="form.get('industry').hasError('required')">
-                Industry is Required!
-              </mat-error>
-            </mat-form-field>
+          <div fxLayout="row" class="header">
+            <div fxLayout="row" fxFlex fxLayoutAlign="space-evenly center">
+              <mat-form-field class="container-field">
+                <mat-label>Equity Capitalization</mat-label>
+                <mat-select placeholder="{{capatializationInput}}" formControlName="capatialization">
+                  <mat-option *ngFor="let capatialization of capatialization" [value]="capatialization">
+                    {{capatialization}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="form.get('capatialization').hasError('required')">
+                  Capatialization is Required!
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field class="container-field">
+                <mat-label>Revenue</mat-label>
+                <mat-select placeholder="{{revenueInput}}" formControlName="revenue">
+                  <mat-option *ngFor="let revenue of revenue" [value]="revenue">{{revenue}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="form.get('revenue').hasError('required')">
+                  Revenue is Required!
+                </mat-error>
+              </mat-form-field>
+            </div>
           </div>
-        </div>
-        <div fxLayout="row" class="header">
-          <div fxLayout="row" fxFlex fxLayoutAlign="space-evenly center">
-            <mat-form-field class="container-field">
-              <mat-label>Geography</mat-label>
-              <mat-select placeholder="{{geographyInput}}" formControlName="geography">
-                <mat-option *ngFor="let geography of geography" [value]="geography">{{geography}}</mat-option>
-              </mat-select>
-              <mat-error *ngIf="form.get('geography').hasError('required')">
-                geography is Required!
-              </mat-error>
-            </mat-form-field>
-
-            <mat-form-field class="container-field">
-              <mat-label>Number of Employees</mat-label>
-              <mat-select placeholder="{{companysizeInput}}" formControlName="companysize">
-                <mat-option *ngFor="let companysize of companysize" [value]="companysize">{{companysize}}
-                </mat-option>
-              </mat-select>
-              <mat-error *ngIf="form.get('companysize').hasError('required')">
-                Company Size is Required!
-              </mat-error>
-            </mat-form-field>
-          </div>
-        </div>
-        <div fxLayout="row" class="header">
-          <div fxLayout="row" fxFlex fxLayoutAlign="space-evenly center">
-            <mat-form-field class="container-field">
-              <mat-label>Equity Capitalization</mat-label>
-              <mat-select placeholder="{{capatializationInput}}" formControlName="capatialization">
-                <mat-option *ngFor="let capatialization of capatialization" [value]="capatialization">
-                  {{capatialization}}</mat-option>
-              </mat-select>
-              <mat-error *ngIf="form.get('capatialization').hasError('required')">
-                Capatialization is Required!
-              </mat-error>
-            </mat-form-field>
-            <mat-form-field class="container-field">
-              <mat-label>Revenue</mat-label>
-              <mat-select placeholder="{{revenueInput}}" formControlName="revenue">
-                <mat-option *ngFor="let revenue of revenue" [value]="revenue">{{revenue}}</mat-option>
-              </mat-select>
-              <mat-error *ngIf="form.get('revenue').hasError('required')">
-                Revenue is Required!
-              </mat-error>
-            </mat-form-field>
-          </div>
-        </div>
-      </mat-card-content>
-    </mat-card>
-    <div class="row" style="padding-left: 45%;">
-      <button  class="upload-btn" mat-stroked-button type="submit" mat-raised-button>
-        Save
-        <mat-spinner *ngIf = "inprogress" style="margin-top: 8px; padding: 3px 8px; margin-left: 10px; display: inline;" diameter="20"></mat-spinner>
-      </button>
-     
-      <button  class="upload-btn" mat-stroked-button mat-raised-button (click) = "goToProfile()">
-        Cancel
-      </button>
-   </div>
-	 </form>
-</div>
+        </mat-card-content>
+      </mat-card>
+      <div class="row" style="padding-left: 45%;">
+        <button  class="upload-btn" mat-stroked-button type="submit" mat-raised-button>
+          Save
+          <mat-spinner *ngIf = "inprogress" style="margin-top: 8px; padding: 3px 8px; margin-left: 10px; display: inline;" diameter="20"></mat-spinner>
+        </button>
+       
+        <button  class="upload-btn" mat-stroked-button mat-raised-button (click) = "goToProfile()">
+          Cancel
+        </button>
+     </div>
+     </form>
+  </div>
+  
+</ng-template>
+<ng-template [ngIf] = "!imageLoaded || !authService.authServiceLoaded">
+  <div id="loader-container">
+    <div id="loader"></div>
+    <div>
+      Loading Organization Info 
+    </div>
+  </div>
+</ng-template>
+<a style="display: none;" #downloadLink></a>

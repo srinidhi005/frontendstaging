@@ -47,7 +47,7 @@ let ELEMENT_BS_PDF: PLElement[] = [];
   styleUrls: ['./bsmetrics.component.scss'],
 })
 export class BsmetricsComponent implements OnInit {
-  @ViewChild('imagecanvas', { static: true }) imagecanvas: ElementRef;
+  @ViewChild('imagecanvas', { static: false }) imagecanvas: ElementRef;
   scenarioArray = [];
   scenario = this.UserDetailModelService.getSelectedScenario();
   companyName = this.UserDetailModelService.getSelectedCompany();
@@ -655,13 +655,12 @@ export class BsmetricsComponent implements OnInit {
           style: 'header',
         },
         {
-          //style: 'tableExample',
-          // layout: 'lightHorizontalLines',
+         
 
           table: {
             headerRows: 1,
             heights: 20,
-            //width:'auto',
+           
             widths: [235, 75, 75, 75, 75, 75, 75, 75],
             body: data,
           },
@@ -676,9 +675,7 @@ export class BsmetricsComponent implements OnInit {
             hLineColor: function (i, node) {
               return i === 0 || i === node.table.body.length ? 'black' : 'gray';
             },
-            // vLineColor: function (i, node) {
-            //   return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
-            // }
+           
           },
         },
       ],
@@ -690,14 +687,7 @@ export class BsmetricsComponent implements OnInit {
         },
       },
     };
-    // pdfMake.tableLayouts = {
-    //   exampleLayout : {
-    //     paddingLeft: function (i) {
-    //       return 20;
-    //     },
-    //   }
-    // }
-
+    
     pdfMake.createPdf(docDefinition).download();
   }
 
@@ -719,7 +709,7 @@ export class BsmetricsComponent implements OnInit {
           return {
             text:
               year.indexOf('-') >= 0
-                ? '( ' + year.replace('-', '') + ' )'
+                ? '(' + year.replace('-', '') + ')'
                 : year,
             margin: [0, 10, 0, 10],
             alignment: 'right',
@@ -729,7 +719,7 @@ export class BsmetricsComponent implements OnInit {
           return {
             text:
               year.indexOf('-') >= 0
-                ? '( ' + year.replace('-', '') + ' )'
+                ? '(' + year.replace('-', '') + ')'
                 : year,
             margin: [0, 10, 0, 10],
             alignment: 'right',

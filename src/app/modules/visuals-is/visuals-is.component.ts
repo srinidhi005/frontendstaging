@@ -15,6 +15,11 @@ import { MatDialog } from '@angular/material';
 import { VisualBSInputDialogComponent } from './input-value-dialog.component';
 import { AuthService } from 'src/app/auth.service';
 draggable(Highcharts);
+  Highcharts.setOptions({
+    lang: {
+      thousandsSep: ','
+    }
+  });
 const tooltip = {
   backgroundColor: '#5A6574',
   style: {
@@ -1012,12 +1017,15 @@ export class VisualsISComponent implements OnInit {
                   title: { text: 'Net Interest Expense' },
                   yAxis: {
                     title: {
-                      text: 'USD (millions)',
+                      text: 'USD (in billions)',
                       style: {
                         fontSize: '14px',
                       },
                     },
                     labels: {
+						formatter: function() {
+          return this.value /1000  + 'B';
+        },
                       style: {
                         fontSize: '13px',
                       },
@@ -1205,12 +1213,15 @@ export class VisualsISComponent implements OnInit {
       title: { text: 'Total Revenue' },
       yAxis: {
         title: {
-          text: 'USD',
+          text: 'USD (in billions)',
           style: {
             fontSize: '14px',
           },
         },
         labels: {
+			formatter: function() {
+          return this.value /1000  + 'B';
+        },
           style: {
             fontSize: '13px',
           },
@@ -1228,7 +1239,7 @@ export class VisualsISComponent implements OnInit {
       tooltip: {
         ...tooltip,
         formatter() {
-          return Highcharts.numberFormat(this.point.y, 0) + ' USD';
+           return Highcharts.numberFormat(this.point.y, 0) + ' million ';
         },
       },
       plotOptions: {
@@ -1252,12 +1263,15 @@ export class VisualsISComponent implements OnInit {
       title: { text: 'Gross Profit' },
       yAxis: {
         title: {
-          text: 'USD',
+          text: 'USD (in billions)',
           style: {
             fontSize: '14px',
           },
         },
         labels: {
+				formatter: function() {
+          return this.value /1000  + 'B';
+        },
           style: {
             fontSize: '13px',
           },
@@ -1285,7 +1299,7 @@ export class VisualsISComponent implements OnInit {
       tooltip: {
         ...tooltip,
         formatter() {
-          return Highcharts.numberFormat(this.point.y, 0) + ' USD';
+          return Highcharts.numberFormat(this.point.y, 0) + ' million';
         },
       },
       credits: { enabled: false },
@@ -1297,12 +1311,15 @@ export class VisualsISComponent implements OnInit {
       chart: { type: 'column', animation: false },
       title: { text: 'EBIT' },
       yAxis: {
-        title: { text: 'USD' },
+        title: { text: 'USD (in billions)' },
         style: {
           fontSize: '14px',
         },
 
         labels: {
+				formatter: function() {
+          return this.value /1000  + 'B';
+        },
           style: {
             fontSize: '13px',
           },
@@ -1331,7 +1348,7 @@ export class VisualsISComponent implements OnInit {
       tooltip: {
         ...tooltip,
         formatter() {
-          return Highcharts.numberFormat(this.point.y, 0) + ' USD';
+          return Highcharts.numberFormat(this.point.y, 0) + ' million';
         },
       },
       credits: { enabled: false },
@@ -1344,7 +1361,7 @@ export class VisualsISComponent implements OnInit {
       title: { text: 'EBITDA' },
       yAxis: {
         title: {
-          text: 'USD',
+          text: 'USD (in billions)',
           style: {
             fontSize: '14px',
           },
@@ -1378,7 +1395,7 @@ export class VisualsISComponent implements OnInit {
       tooltip: {
         ...tooltip,
         formatter() {
-          return Highcharts.numberFormat(this.point.y, 0) + ' USD';
+          return Highcharts.numberFormat(this.point.y, 0) + ' million';
         },
       },
       credits: { enabled: false },
@@ -1391,12 +1408,15 @@ export class VisualsISComponent implements OnInit {
       title: { text: 'EBT' },
       yAxis: {
         title: {
-          text: 'USD',
+          text: 'USD (in billions)',
           style: {
             fontSize: '14px',
           },
         },
         labels: {
+				formatter: function() {
+          return this.value /1000  + 'B';
+        },
           style: {
             fontSize: '13px',
           },
@@ -1424,7 +1444,7 @@ export class VisualsISComponent implements OnInit {
       tooltip: {
         ...tooltip,
         formatter() {
-          return Highcharts.numberFormat(this.point.y, 0) + ' USD';
+          return Highcharts.numberFormat(this.point.y, 0) + ' million';
         },
       },
       credits: { enabled: false },
@@ -1437,12 +1457,15 @@ export class VisualsISComponent implements OnInit {
       title: { text: 'Net Income' },
       yAxis: {
         title: {
-          text: 'USD',
+          text: 'USD (in billions)',
           style: {
             fontSize: '14px',
           },
         },
         labels: {
+				formatter: function() {
+          return this.value /1000  + 'B';
+        },
           style: {
             fontSize: '13px',
           },
@@ -1470,7 +1493,7 @@ export class VisualsISComponent implements OnInit {
       tooltip: {
         ...tooltip,
         formatter() {
-          return Highcharts.numberFormat(this.point.y, 0) + ' USD';
+          return Highcharts.numberFormat(this.point.y, 0) + ' million';
         },
       },
       credits: { enabled: false },

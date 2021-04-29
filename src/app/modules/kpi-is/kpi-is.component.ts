@@ -29,7 +29,7 @@ let ELEMENT_PL_PDF = [];
   styleUrls: ['./kpi-is.component.scss'],
 })
 export class KpiIsComponent implements OnInit {
-  @ViewChild('imagecanvas', { static: true }) imagecanvas: ElementRef;
+  @ViewChild('imagecanvas', { static: false }) imagecanvas: ElementRef;
   scenario = this.UserDetailModelService.getSelectedScenario();
   companyName = this.UserDetailModelService.getSelectedCompany();
   loadedScenario = 'Scenario 0';

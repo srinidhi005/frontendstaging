@@ -402,19 +402,20 @@ export class VisualsCfComponent implements OnInit {
                   title: { text: 'Dividends Paid' },
                   yAxis: {
                     title: {
-                      text: 'USD (millions)',
-                      style: {
+                      text: 'USD (billions)',
+             style: {
                         fontSize: '14px',
-                      },
-                    },
-                    labels: {
+                      }  
+	  },
+				labels: {
+					formatter: function() {
+          return this.value /1000  + 'B';
+        },
                       style: {
                         fontSize: '13px',
-                      },
+                      }
                     },
-                    min: 0,
-                    tickInterval: 50,
-                  },
+	  },
                   xAxis: {
                     categories: this.yearsArray,
                     labels: {
@@ -499,7 +500,7 @@ export class VisualsCfComponent implements OnInit {
                   title: {
                     text: 'Capex (% of Revenue)',
                     style: {
-                      fontSize: '14px',
+                      fontSize: '16px',
                     },
                   },
                   yAxis: {
@@ -605,8 +606,7 @@ export class VisualsCfComponent implements OnInit {
                       },
                     },
 
-                    min: 0,
-                    max: 50,
+                   
                     tickInterval: 10,
                   },
                   xAxis: {
@@ -911,12 +911,15 @@ export class VisualsCfComponent implements OnInit {
       title: { text: 'Cash Flow from Operating Activities (CFO)' },
       yAxis: {
         title: {
-          text: 'USD',
+          text: 'USD (in billions)',
           style: {
             fontSize: '14px',
           },
         },
         labels: {
+					formatter: function() {
+          return this.value /1000  + 'B';
+			},
           style: {
             fontSize: '13px',
           },
@@ -952,7 +955,7 @@ export class VisualsCfComponent implements OnInit {
       tooltip: {
         ...tooltip,
         formatter: function () {
-          return Highcharts.numberFormat(this.point.y, 0) + ' USD';
+          return Highcharts.numberFormat(this.point.y, 0) + ' million';
         },
       },
       credits: { enabled: false },
@@ -965,12 +968,15 @@ export class VisualsCfComponent implements OnInit {
       title: { text: 'Cash Flow from Investing Activities (CFI)' },
       yAxis: {
         title: {
-          text: 'USD',
+          text: 'USD (in billions)',
           style: {
             fontSize: '14px',
           },
         },
         labels: {
+					formatter: function() {
+          return this.value /1000  + 'B';
+			},
           style: {
             fontSize: '13px',
           },
@@ -1020,6 +1026,9 @@ export class VisualsCfComponent implements OnInit {
       yAxis: {
         title: { text: 'USD', style: { fontSize: '14px' } },
         labels: {
+					formatter: function() {
+          return this.value /1000  + 'B';
+			},
           style: {
             fontSize: '13px',
           },
@@ -1055,7 +1064,7 @@ export class VisualsCfComponent implements OnInit {
       tooltip: {
         ...tooltip,
         formatter: function () {
-          return Highcharts.numberFormat(this.point.y, 0) + ' USD';
+          return Highcharts.numberFormat(this.point.y, 0) + ' million';
         },
       },
       credits: { enabled: false },
@@ -1068,13 +1077,16 @@ export class VisualsCfComponent implements OnInit {
       title: { text: 'Net Change in Cash' },
       yAxis: {
         title: {
-          text: 'USD',
+          text: 'USD (in billions)',
           style: {
             fontSize: '14px',
           },
         },
 
         labels: {
+					formatter: function() {
+          return this.value /1000  + 'B';
+			},
           style: {
             fontSize: '13px',
           },
@@ -1111,7 +1123,7 @@ export class VisualsCfComponent implements OnInit {
       tooltip: {
         ...tooltip,
         formatter: function () {
-          return Highcharts.numberFormat(this.point.y, 0) + ' USD';
+          return Highcharts.numberFormat(this.point.y, 0) + ' million';
         },
       },
       credits: { enabled: false },

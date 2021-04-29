@@ -30,7 +30,8 @@ export interface PLElement {
   '(+) Depreciation & Amortization (D&A)': string;
   EBITDA: string;
   'EBITDA Margin': string;
-  '(-) Net Interest/Other Income Expense': string;
+  '(+/-) Net Interest (Expense)': string;
+  '(+/-) Other Income (Expense)': string;
   EBT: string;
   'EBT Margin': string;
   '(-) Taxes': string;
@@ -46,7 +47,7 @@ let ELEMENT_PL_PDF: PLElement[] = [];
   styleUrls: ['./plmetrics.component.scss'],
 })
 export class PLMetricsComponent implements OnInit {
-  @ViewChild('imagecanvas', { static: true }) imagecanvas: ElementRef;
+  @ViewChild('imagecanvas', { static: false }) imagecanvas: ElementRef;
   scenarioArray = [];
   scenario = this.UserDetailModelService.getSelectedScenario();
   companyName = this.UserDetailModelService.getSelectedCompany();
@@ -579,7 +580,7 @@ export class PLMetricsComponent implements OnInit {
           return {
             text:
               year.indexOf('-') >= 0
-                ? '( ' + year.replace('-', '') + ' )'
+                ? '(' + year.replace('-', '') + ')'
                 : year,
             margin: [0, 10, 0, 10],
             alignment: 'right',
@@ -589,7 +590,7 @@ export class PLMetricsComponent implements OnInit {
           return {
             text:
               year.indexOf('-') >= 0
-                ? '( ' + year.replace('-', '') + ' )'
+                ? '(' + year.replace('-', '') + ')'
                 : year,
             margin: [0, 10, 0, 10],
             alignment: 'right',

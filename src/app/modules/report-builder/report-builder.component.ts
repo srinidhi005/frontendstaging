@@ -11,6 +11,8 @@ import { LoadingPopupComponent } from '../loading-popup/loading-popup.component'
 import { MatDialog } from '@angular/material';
 import { AuthService } from 'src/app/auth.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { cloneDeep } from 'lodash';
+import { ExcelService } from 'src/app/shared/excel.service';
 
 
 export interface PLElement {
@@ -46,6 +48,7 @@ export class ReportBuilderComponent implements OnInit {
     private apiService: RMIAPIsService,
     public authService: AuthService,
     private dialog: MatDialog,
+    public excelService: ExcelService,
     public reportService: ReportBuilderService,
     private sanitizer: DomSanitizer
   ) {}
@@ -132,15 +135,21 @@ export class ReportBuilderComponent implements OnInit {
 
     this.loadCompanies();
 
-    this.apiService.getLogo(this.urlConfig.GetLogoAPI()+"hgjdkd@rmiinsights.com").subscribe( (res : File) => {
-      console.log("Succesfully fetched the logo", res)
-      if(res.type != "text/html"){
-        // this.file = res;
-        this.organizationLogo = this.sanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(res))
-      }
-    }, error => {
-      console.log("Failed to fetch the logo", error)
-    })
+    if(!this.excelService.organizationLogo){
+      this.authService.getUserById(this.authService.loggedInUserId).subscribe(
+        (res) => {
+          console.log('USER', res);
+          const currentUser : any = res.body;
+          if (currentUser && currentUser.user_metadata && currentUser.user_metadata.organizationLogo) {
+            this.excelService.organizationLogo = currentUser.user_metadata.organizationLogo;
+          }
+  
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    }
 
     }
     else{
@@ -154,11 +163,11 @@ export class ReportBuilderComponent implements OnInit {
   }
 
   async loadCompanies() {
-  //const employer = localStorage.getItem('employer');
+  const employer = localStorage.getItem('employer');
     try {
       const companiesAPIData: any = await this.apiService
-       //.getData(this.urlConfig.getStatementAPI() + employer)
-        .getData(this.urlConfig.getStatementAPI() + 'rmiinsights')
+       .getData(this.urlConfig.getStatementAPI() + employer)
+        
         .toPromise();
       this.allCompanies = companiesAPIData.map((comp) => {
         return { compName: comp.companyname, compActualName: comp.company };
@@ -173,7 +182,7 @@ export class ReportBuilderComponent implements OnInit {
 
   loadSelectedMetric(srcObj, selectedMetric) {
     console.log(srcObj, selectedMetric);
-    srcObj.selectedMetric = selectedMetric;
+    srcObj.selectedMetric = cloneDeep(selectedMetric);
   }
 
   loadCompany(comp) {    
@@ -248,12 +257,12 @@ export class ReportBuilderComponent implements OnInit {
 
     let organizationLogo;
 
-    if(this.organizationLogo){
+    if(this.excelService.organizationLogo){
       var canvas = document.createElement('canvas');
-    canvas.width = this.imageOrganizational.nativeElement.width;
-    canvas.height = this.imageOrganizational.nativeElement.height;
-    canvas.getContext('2d').drawImage(this.imageOrganizational.nativeElement, 0, 0);
-    organizationLogo = canvas.toDataURL('image/png', 1);
+      canvas.width = this.imageOrganizational.nativeElement.width;
+      canvas.height = this.imageOrganizational.nativeElement.height;
+      canvas.getContext('2d').drawImage(this.imageOrganizational.nativeElement, 0, 0);
+      organizationLogo = canvas.toDataURL('image/png', 1);
     }
 
     await this.initScenario(this.selectedScenario);
@@ -268,26 +277,7 @@ export class ReportBuilderComponent implements OnInit {
 
     let logo;
 
-    // try {
-    //   const res  = await this.apiService.getLogo(this.urlConfig.GetLogoAPI()+"hgjdkd@rmiinsights.com").toPromise<Blob>();
-    //   console.log("Succesfully fetched the logo", res)
-    //   if(res.type != "text/html"){
-    //     // this.file = res;
-    //     logo = this.sanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(res))
-    //   }
-    // } 
-    // catch (error) {
-      
-    // }
-
-    // if(logo){
-    //   try {
-    //     this.organizationLogo = await this.getBase64ImageFromURL(logo)
-    //   } catch (error) {
-        
-    //   }
-  
-    // }
+    
 
     setTimeout(async () => {
 
@@ -335,17 +325,7 @@ export class ReportBuilderComponent implements OnInit {
     }, 1500);
     
 
-    // setTimeout(() => {
-    //   html2canvas(this.imagecover.nativeElement, {scale: 2}).then((canvas1) => {
-    //     this.coverImage = canvas1.toDataURL();
-    //     this.showCoverImage = false;
-    //     this.exportToPdf1(imagermi,this.coverImage);
-    //   }); 
-    // }, 1500);
-
-    // setTimeout(() => {
-    //   this.exportToPdf1(imagermi,imagermicover);
-    // }, 1500);
+    
     }
     
   }
@@ -545,22 +525,7 @@ export class ReportBuilderComponent implements OnInit {
   exportToPdf1(imagermi,imagecover, creditScoreCard, organizationLogo?) {
     const content = [];
 
-    // content.push({ 
-    //   image: imagermi, width: 130, height: 90, pageOrientation: "landscape",
-    // })
-    // content.push({
-    //   text: "Valuations",
-    //   style: 'header',
-    //   // pageOrientation: "landscape",
-    //   // pageBreak: 'after',
-    // })
-
-    // content.push({
-    //   text:
-    //     this.selectedCompany.compName + " - " + "Scenario "  + this.selectedScenario,
-    //     style: 'subheader',
-    //     pageOrientation: "portrait",
-    // })
+    
     html2canvas(this.firstBlock.nativeElement, {scale: 2}).then((canvas1) => {
       const canvasData1 = canvas1.toDataURL();
       content.push({

@@ -670,11 +670,16 @@ export class DcfComponent implements OnInit {
     console.log("After Calc", this.financials)
   }
 
+
+
   calculateDiscountFactor(){
     for (const [key, value] of this.financialObj){
       if(key.indexOf("-") == -1 && key != "terminal"){
         const operand1 = (1 + (this.financialObj.get(key).wacc/100)) ** this.financialObj.get(key).Period
         this.financialObj.get(key).DiscountFactor = (1/operand1) * 100;
+		console.log("discount",this.financialObj.get(key).wacc)
+		console.log("discount",this.financialObj.get(key).DiscountFactor)
+		console.log("period",this.financialObj.get(key).Period)
       }
     }
   }
@@ -683,9 +688,13 @@ export class DcfComponent implements OnInit {
     this.years.forEach( fy => {
       if(fy.indexOf("-") == -1 && fy != "terminal"){
         this.financialObj.get(fy).PresentFcf = (this.financialObj.get(fy).DiscountFactor/100) * this.financialObj.get(fy).UnleveredFreeCashFlow
+		console.log("fcf",this.financialObj.get(fy).PresentFcf)
+		console.log("discountfactor",this.financialObj.get(fy).DiscountFactor/100)
+		console.log("uncf",this.financialObj.get(fy).UnleveredFreeCashFlow)
       }
     })
   }
+  
 
   calculatePresentValueOfTerminalValue(){
     const totalYear = this.years.find( fy => fy.indexOf("-") >= 0)
@@ -697,27 +706,16 @@ export class DcfComponent implements OnInit {
   }
 
   calculateTotalPresentValueFCF(){
-    const totalYear = this.years.find( fy => fy.indexOf("-") >= 0)
-
-    if(totalYear){
-      this.years.forEach( fy => {
-        if(fy != totalYear){
-          this.financialObj.get(totalYear).PresentFcf += this.financialObj.get(fy).PresentFcf
-        }
-      })
-    }
+	const totalYear = this.years.find( fy => fy.indexOf("-") >= 0)
+	this.financialObj.get(totalYear).PresentFcf = this.financialObj.get(this.years[0]).PresentFcf+this.financialObj.get(this.years[1]).PresentFcf+this.financialObj.get(this.years[2]).PresentFcf
+	  this.financialObj.get(this.years[3]).PresentFcf+this.financialObj.get(this.years[4]).PresentFcf
   }
+  
 
   calculateTotalPresentValueOfTerminalValue(){
     const totalYear = this.years.find( fy => fy.indexOf("-") >= 0)
-    
-    if(totalYear){
-      this.years.forEach( fy => {
-        if(fy != totalYear){
-          this.financialObj.get(totalYear).PresentTerminalValue += this.financialObj.get(fy).PresentTerminalValue
-        }
-      })
-    }
+    this.financialObj.get(totalYear).PresentTerminalValue = this.financialObj.get(this.years[6]).PresentTerminalValue
+console.log("PFCF",this.financialObj.get(this.years[6]).PresentTerminalValue)
   }
 
   calculateTotal(){
@@ -774,7 +772,9 @@ export class DcfComponent implements OnInit {
   }
 
   calculateWacc(){
-    this.financialObj.get(this.years[0]).wacc = (((+this.financialObj.get(this.years[0]).equityToTotalCap/100) * (+this.financialObj.get(this.years[0]).costOfEquity/100)) + ((+this.financialObj.get(this.years[0]).debtToTotalCap/100) * (this.financialObj.get(this.years[0]).afterTaxCostOfDebt/100))) * 100
+	  this.years.forEach( fy => {
+    this.financialObj.get(fy).wacc = (((+this.financialObj.get(this.years[0]).equityToTotalCap/100) * (+this.financialObj.get(this.years[0]).costOfEquity/100)) + ((+this.financialObj.get(this.years[0]).debtToTotalCap/100) * (this.financialObj.get(this.years[0]).afterTaxCostOfDebt/100))) * 100
+  })
   }
 
 

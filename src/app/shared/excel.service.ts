@@ -27,6 +27,8 @@ export class ExcelService {
   profitabilityRatiosData = []
   selectedDashboardMenu;
 
+  organizationLogo;
+
   public exportAsExcelFile(json: any[], excelFileName: string, headersArray: any[],  companyName: string,scenarioName: string): void {
 
     // const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(json);

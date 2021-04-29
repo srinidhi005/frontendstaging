@@ -41,7 +41,7 @@ let ELEMENT_PL_PDF: PLElement[] = [];
   styleUrls: ['./cashmetrics.component.scss']
 })
 export class CashmetricsComponent implements OnInit {
-	@ViewChild('imagecanvas', { static: true }) imagecanvas: ElementRef;
+	@ViewChild('imagecanvas', { static: false }) imagecanvas: ElementRef;
   scenarioArray=[];
   scenario=this.UserDetailModelService.getSelectedScenario();
   companyName=this.UserDetailModelService.getSelectedCompany();
@@ -487,10 +487,10 @@ var canvas = document.createElement('canvas');
         }
         else {
 			if(isfundsfromOperations){
-          return {text: year.indexOf("-") >= 0 ? "( " + year.replace("-", "") +" )" : year, margin: [0, 10, 0, 10],alignment: 'right',bold:true}
+          return {text: year.indexOf("-") >= 0 ? "(" + year.replace("-", "") +")" : year, margin: [0, 10, 0, 10],alignment: 'right',bold:true}
         }
 		else{
-			return {text: year.indexOf("-") >= 0 ? "( " + year.replace("-", "") +" )" : year, margin: [0, 10, 0, 10],alignment: 'right'}
+			return {text: year.indexOf("-") >= 0 ? "(" + year.replace("-", "") +")" : year, margin: [0, 10, 0, 10],alignment: 'right'}
 		}
 		}
       })

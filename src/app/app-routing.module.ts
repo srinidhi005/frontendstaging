@@ -37,7 +37,7 @@ const routes: Routes = [
   {
     path: 'login',
     component: AuthLoginComponent,
-    //canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
   },
   {
     path: '',
@@ -46,38 +46,38 @@ const routes: Routes = [
       {
         path: 'statement',
         component: StatementComponent,
-        //canActivate: [AuthGuard],
+        canActivate: [AuthGuard],
       },
 	  {
 		  path:'company',
 		  component:CompanyDetailsComponent,
-		  //canActivate: [AuthGuard],
+		  canActivate: [AuthGuard],
 	  },
       {
         path: 'addcompany',
         component: AddCompanyComponent,
-        //canActivate: [AuthGuard],
+        canActivate: [AuthGuard],
       },
       {
         path: 'visualsIS',
         component: VisualsISComponent,
-        //canActivate: [AuthGuard],
+        canActivate: [AuthGuard],
       },
       {
         path: 'visualsBS',
         component: VisualsBsComponent,
-        //canActivate: [AuthGuard],
+        canActivate: [AuthGuard],
       },
        {
 	  path:'comparator',
 	  component:ComparatorComponent,
-	  //canActivate: [AuthGuard],
+	  canActivate: [AuthGuard],
 	  },
 
 	{
         path: 'subscribe',
         component: SubscriptionComponent,
-        //canActivate: [AuthGuard],
+        canActivate: [AuthGuard],
       },
 	  {
 	  path: 'Users',
@@ -86,74 +86,74 @@ const routes: Routes = [
       {
         path: 'visualsCF',
         component: VisualsCfComponent,
-       //canActivate: [AuthGuard],
+       canActivate: [AuthGuard],
       },
       {
         path: 'cashmetrics',
         component: CashmetricsComponent,
-       //canActivate: [AuthGuard],
+       canActivate: [AuthGuard],
       },
       {
         path: 'IncomeStatementMetrics',
         component: PLMetricsComponent,
-       //canActivate: [AuthGuard],
+       canActivate: [AuthGuard],
       },
       {
         path: 'BalanceSheetMetrics',
         component: BsmetricsComponent,
-       //canActivate: [AuthGuard],
+       canActivate: [AuthGuard],
       },
       {
         path: 'KPIIncomeStatement',
         component: KpiIsComponent,
-       //canActivate: [AuthGuard],
+       canActivate: [AuthGuard],
       },
 		  	   {
         path: 'report',
         component: ReportBuilderComponent,
-        //canActivate: [AuthGuard],
+        canActivate: [AuthGuard],
       },
       {
         path: 'KPIBalanceSheet',
         component: KpiBsComponent,
-       //canActivate: [AuthGuard],
+       canActivate: [AuthGuard],
       },
       {
         path: 'profile',
         component: ProfileComponent,
-       //canActivate: [AuthGuard],
+       canActivate: [AuthGuard],
       },
 	  
 	  
       {
         path: 'user',
         component: UserDetailsComponent,
-       //canActivate: [AuthGuard],
+       canActivate: [AuthGuard],
       },
 	{
         path: 'scorecard',
         component: CreditScorecardComponent,
-        //canActivate: [AuthGuard],
+        canActivate: [AuthGuard],
       },
 	  {
         path: 'dcf',
         component: DcfComponent,
-      //canActivate: [AuthGuard],
+      canActivate: [AuthGuard],
       },
       {
         path: ':companyName/dashboard/:scenario',
         component: CompanyDashboardComponent,
-       //canActivate: [AuthGuard],
+       canActivate: [AuthGuard],
       },
 	  {
         path: 'KPICashflow',
         component: KpiCashflowComponent,
-       //canActivate: [AuthGuard],
+       canActivate: [AuthGuard],
       },
       {
         path: 'ratios',
         component: RatiosComponent,
-        //canActivate: [AuthGuard],
+        canActivate: [AuthGuard],
       },
     ],
   },

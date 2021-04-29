@@ -41,6 +41,8 @@
   </div>
   <ng-template [ngIf]="dcf">
     <div class="container" style="padding: 0; margin: 0; max-width: 100%" #firstBlock>
+	
+	
       <div class="row headers" style="
           font-weight: bold;
           background-color: #164a5b;
@@ -55,6 +57,35 @@
 
       <div class="row" style="padding: 0; margin: 0; background: white">
         <div class="col" style="max-width: 40%">
+		
+		          <div class="row headers" style="
+              font-weight: bold;
+              background-color: #164a5b;
+              color: white;
+              font-weight: normal;
+              border-top-left-radius: 5px;
+              border-top-right-radius: 5px;
+            ">
+            Assumptions
+          </div>
+	  
+		          <div class="row" style="background: white">
+            <div class="col left-align">Corporate Tax Rate</div>
+            <div class="col-3 right-align"> {{ this.financialObj.get(this.years[0]).taxRate  | number: '1.1-1' }}%
+              <mat-icon style="display: inline; margin: auto 5px; cursor: pointer" (click)="
+              openPopUpModal( wacc, 'taxRate', 'Corporate Tax Rate')">
+                    edit</mat-icon>
+            </div>
+          </div>
+          <div class="row" style="background: white">
+            <div class="col left-align">EBITDA Exit Multiple</div>
+            <div class="col-3 right-align">
+              {{ this.financialObj.get(this.years[0]).ebitdaExitMultiple | number: '1.1-1' }}x
+              <mat-icon style="display: inline; margin: auto 5px; cursor: pointer" (click)="
+              openPopUpModal( wacc, 'ebitdaExitMultiple', 'EBITDA Exit Multiple')">edit</mat-icon>
+            </div>
+          </div>
+		
           <div class="row headers" style="
               font-weight: bold;
               background-color: #164a5b;
@@ -69,7 +100,7 @@
             <div class="col left-align">Debt to Total Capitalization</div>
             <div class="col-3 right-align">
               {{
-                financialObj.get(this.years[0]).debtToTotalCap  | number: '1.2-2'
+                financialObj.get(this.years[0]).debtToTotalCap  | number: '1.1-1'
               }}
               %
               <mat-icon style="display: inline; margin: auto 5px; cursor: pointer" (click)="
@@ -82,17 +113,20 @@
             <div class="col-3 right-align">
               {{
                 financialObj.get(this.years[0]).equityToTotalCap 
-              | number: '1.2-2'
+              | number: '1.1-1'
               }}
               %
             </div>
           </div>
+	
+		  
+		  
           <div class="row highlight">
             <div class="col left-align" style="font-weight: bold">
               Debt / Equity
             </div>
             <div class="col-3 right-align" style="font-weight: bold">
-              {{ financialObj.get(this.years[0]).debtEquity  | number: '1.2-2' }}%
+              {{ financialObj.get(this.years[0]).debtEquity  | number: '1.1-1' }}%
             </div>
           </div>
 
@@ -110,7 +144,7 @@
             <div class="col left-align">Risk Free Rate (10-Year Treasury)</div>
             <div class="col-3 right-align">
               {{
-                this.financialObj.get(this.years[0]).riskFreeRate  | number: '1.2-2'
+                this.financialObj.get(this.years[0]).riskFreeRate  | number: '1.1-1'
               }}
               %
               <mat-icon style="display: inline; margin: auto 5px; cursor: pointer" (click)="
@@ -123,7 +157,7 @@
             <div class="col-3 right-align">
               {{
                 this.financialObj.get(this.years[0]).equityRiskPremium 
-              | number: '1.2-2'
+              | number: '1.1-1'
               }}
               %
               <mat-icon style="display: inline; margin: auto 5px; cursor: pointer" (click)="
@@ -134,7 +168,7 @@
           <div class="row" style="background: white">
             <div class="col left-align">Levered Beta</div>
             <div class="col-3 right-align">
-              {{ this.financialObj.get(this.years[0]).leveredBeta  | number: '1.2-2' }}
+              {{ this.financialObj.get(this.years[0]).leveredBeta  | number: '1.1-1' }}
             </div>
           </div>
           <div class="row highlight">
@@ -144,7 +178,7 @@
 
             <div class="col-3 right-align" style="font-weight: bold">
               {{
-                this.financialObj.get(this.years[0]).costOfEquity  | number: '1.2-2'
+                this.financialObj.get(this.years[0]).costOfEquity  | number: '1.1-1'
               }}%
             </div>
           </div>
@@ -163,7 +197,7 @@
           <div class="row" style="background: white">
             <div class="col left-align">Cost of Debt</div>
             <div class="col-3 right-align">
-              {{ this.financialObj.get(this.years[0]).costOfDebt  | number: '1.2-2' }}%
+              {{ this.financialObj.get(this.years[0]).costOfDebt  | number: '1.1-1' }}%
               <mat-icon style="display: inline; margin: auto 5px; cursor: pointer" (click)="
               openPopUpModal( wacc, 'costOfDebt', 'Cost of Debt')">
                 edit</mat-icon>
@@ -172,7 +206,7 @@
           <div class="row" style="background: white">
             <div class="col left-align">Tax Rate</div>
             <div class="col-3 right-align">
-              {{ this.financialObj.get(this.years[0]).taxRate  | number: '1.2-2' }}%
+              {{ this.financialObj.get(this.years[0]).taxRate  | number: '1.1-1' }}%
             </div>
           </div>
           <div class="row highlight">
@@ -182,7 +216,7 @@
             <div class="col-3 right-align" style="font-weight: bold">
               {{
                 this.financialObj.get(this.years[0]).afterTaxCostOfDebt 
-              | number: '1.2-2'
+              | number: '1.1-1'
               }}
               %
             </div>
@@ -193,7 +227,7 @@
             <div class="col-3 right-align" style="font-weight: bold">
               {{
                 this.financialObj.get(this.years[0]).wacc 
-              | number: '1.2-2'
+              | number: '1.1-1'
               }}
               %
               <!-- <mat-icon style="display: inline; margin: auto 5px; cursor: pointer" (click)="
@@ -217,32 +251,8 @@
             </ng-template> -->
           </div>
 
-          <div class="row headers" style="
-              font-weight: bold;
-              background-color: #164a5b;
-              color: white;
-              font-weight: normal;
-              border-top-left-radius: 5px;
-              border-top-right-radius: 5px;
-            ">
-            Assumptions
-          </div>
 
-          <div class="row" style="background: white">
-            <div class="col left-align">Corporate Tax Rate</div>
-            <div class="col-3 right-align"> {{ this.financialObj.get(this.years[0]).taxRate  | number: '1.2-2' }}%
-              <mat-icon style="display: inline; margin: auto 5px; cursor: pointer" (click)="
-              openPopUpModal( wacc, 'taxRate', 'Corporate Tax Rate')">
-                    edit</mat-icon>
-            </div>
-          </div>
-          <div class="row" style="background: white">
-            <div class="col left-align">EBITDA Exit Multiple</div>
-            <div class="col-3 right-align">
-              {{ this.financialObj.get(this.years[0]).ebitdaExitMultiple | number: '1.2-2' }}
-              <mat-icon style="display: inline; margin: auto 5px; cursor: pointer">edit</mat-icon>
-            </div>
-          </div>
+  
           <!-- <div class="row highlight">
             <div class="col left-align" style="font-weight: bold">
               After-Tax Cost of Debt
@@ -297,16 +307,16 @@
                 {{ comp?.company }}
               </div>
               <div class="col-2 right-align">
-                {{ comp?.levered_beta | number: '1.2-2' }}
+                {{ comp?.levered_beta | number: '1.1-1' }}
               </div>
               <div class="col-2 right-align">
                 {{ comp?.debt_equity | number: '1.1-2' }}%
               </div>
               <div class="col-2 right-align">
-                {{ comp?.tax_rate | number: '1.2-2' }}%
+                {{ comp?.tax_rate | number: '1.1-1' }}%
               </div>
               <div class="col-2 right-align">
-                {{ comp?.unlevered_beta | number: '1.2-2' }}
+                {{ comp?.unlevered_beta | number: '1.1-1' }}
               </div>
             </div>
           </ng-template>
@@ -315,14 +325,14 @@
             <div class="col-2 left-align">Median</div>
             <div class="col 2 left-align"></div>
             <div class="col-2 right-align">
-              {{ dcf.median?.levered_beta | number: '1.2-2' }}
+              {{ dcf.median?.levered_beta | number: '1.1-1' }}
             </div>
             <div class="col-2 right-align">
               {{ dcf?.median?.debt_equity | number: '1.1-2' }}%
             </div>
             <div class="col-2 right-align"></div>
             <div class="col-2 right-align">
-              {{ dcf.median?.unlevered_beta | number: '1.2-2' }}
+              {{ dcf.median?.unlevered_beta | number: '1.1-1' }}
             </div>
           </div>
         </div>
@@ -368,7 +378,9 @@
                     </ng-template>
                   </th>
                 </ng-template>
+				
               </ng-template>
+			  
             </tr>
 
             <tr>
@@ -510,7 +522,7 @@
 
             <tr>
               <td class="tableboldClass leftAlign">EBT Post NOL Utilization</td>
-              <td class="normalClass rightAlign">
+              <td class="tableboldClass rightAlign">
                 <ng-template [ngIf]="financials[5]?.EBTPostNOLUtilization >= 0">
                   $ {{ financials[5]?.EBTPostNOLUtilization | number: '1.0-0' }}
                 </ng-template>
@@ -778,10 +790,10 @@
                 <ng-template [ngIf]="i != 5">
                   <td class="normalClass rightAlign italic-font">
                     <ng-template [ngIf]="rev['DiscountFactor'] >= 0">
-                      {{ rev['DiscountFactor'] | number: '1.0-0' }}%
+                      {{ rev['DiscountFactor'] | number: '1.1-1' }}%
                     </ng-template>
                     <ng-template [ngIf]="rev['DiscountFactor'] < 0">
-                      ( {{ -rev['DiscountFactor'] | number: '1.0-0' }}%)
+                      ( {{ -rev['DiscountFactor'] | number: '1.1-1' }}%)
                     </ng-template>
                   </td>
                 </ng-template>
@@ -949,7 +961,7 @@
 
             <tr>
               <td class="normalClass leftAlign">
-                Present Value of Terminal Value
+                (+) Present Value of Terminal Value
               </td>
               <td class="normalClass rightAlign">
                 <ng-template [ngIf]="financials[5]?.PresentTerminalValue >= 0">
@@ -1102,18 +1114,18 @@
               </ng-template> -->
               <td class="tableboldClass rightAlign">
                 <ng-template [ngIf]="financials[0]?.fpyebitdaexitmultiple >= 0">
-                  {{ financials[0]?.fpyebitdaexitmultiple | number: '1.0-0' }}x
+                  {{ financials[0]?.fpyebitdaexitmultiple | number: '1.1-1' }}x
                 </ng-template>
                 <ng-template [ngIf]="financials[0]?.fpyebitdaexitmultiple < 0">
-                  ({{ -financials[0]?.fpyebitdaexitmultiple | number: '1.0-0' }}x)
+                  ({{ -financials[0]?.fpyebitdaexitmultiple | number: '1.1-1' }}x)
                 </ng-template>
               </td>
               <td class="tableboldClass rightAlign">
                 <ng-template [ngIf]="financials[1]?.spyebitdaexitmultiple >= 0">
-                  {{ financials[1]?.spyebitdaexitmultiple | number: '1.0-0' }}x
+                  {{ financials[1]?.spyebitdaexitmultiple | number: '1.1-1' }}x
                 </ng-template>
                 <ng-template [ngIf]="financials[1]?.spyebitdaexitmultiple < 0">
-                  ({{ -financials[1]?.spyebitdaexitmultiple | number: '1.0-0' }}x)
+                  ({{ -financials[1]?.spyebitdaexitmultiple | number: '1.1-1' }}x)
                 </ng-template>
               </td>
             </tr>
@@ -1147,7 +1159,7 @@
 
             <tr>
               <td class="tableboldClass">Equity Value</td>
-              <td class="normalClass rightAlign">
+              <td class="tableboldClass rightAlign">
                 <ng-template [ngIf]="financials[0] && financials[0]?.equity >= 0">
                   $ {{ financials[0]?.equity | number: '1.0-0' }}
                 </ng-template>

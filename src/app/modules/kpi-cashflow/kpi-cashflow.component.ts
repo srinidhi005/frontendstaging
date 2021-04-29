@@ -24,7 +24,7 @@ export interface PeriodicElement {
   styleUrls: ['./kpi-cashflow.component.scss']
 })
 export class KpiCashflowComponent implements OnInit {
-@ViewChild('imagecanvas', { static: true }) imagecanvas: ElementRef;
+@ViewChild('imagecanvas', { static: false }) imagecanvas: ElementRef;
 	scenario = this.UserDetailModelService.getSelectedScenario();
   companyName = this.UserDetailModelService.getSelectedCompany();
   loadedScenario = 'Scenario 0';

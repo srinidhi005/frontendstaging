@@ -145,7 +145,7 @@
                     >
 
                 <img id='imgToExport' style="display:none; border: none; box-shadow: none; margin-top: 100px;" 
-                 #imageOrganizational [src]='organizationLogo'>   
+                 #imageOrganizational [src]='excelService.organizationLogo'>   
 
             </mat-card>
         </div>
@@ -1369,10 +1369,6 @@
 
 <ng-template [ngIf]="showCoverImage">
   <img id='imgToExport' style="border: none; box-shadow: none; margin-top: 100px;" #imagecover src='../../../assets/images/Report_logo.jpg'>
-</ng-template>
-
-<ng-template [ngIf]="showOrganizationalLogo && organizationLogo">
-  <img id='imgToExport' style="border: none; box-shadow: none; margin-top: 100px;"  height="450" width="600"  #imageOrganizational [src]='organizationLogo'>
 </ng-template>
 
 

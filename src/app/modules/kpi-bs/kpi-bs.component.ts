@@ -23,7 +23,7 @@ export interface PeriodicElement {
   styleUrls: ['./kpi-bs.component.scss'],
 })
 export class KpiBsComponent implements OnInit {
-@ViewChild('imagecanvas', { static: true }) imagecanvas: ElementRef;
+@ViewChild('imagecanvas', { static: false }) imagecanvas: ElementRef;
   scenario = this.UserDetailModelService.getSelectedScenario();
   companyName = this.UserDetailModelService.getSelectedCompany();
   scenarioArray = [];

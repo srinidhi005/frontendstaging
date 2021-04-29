@@ -5,7 +5,7 @@
 </div>
 <div fxLayout="row" class="header">
 
-<img id='imgToExport' #imagecanvas src='https://app.rmiinsights.com/assets/images/RMI_logo.jpg' style='display:none' height="400" width="600"> 
+<img id='imgToExport' #imagecanvas src='../../../assets/images/RMI_logo.jpg' style='display:none' height="400" width="600"> 
   <div fxLayout="row" fxFlex fxLayoutAlign="end start" fxLayoutGap="5px">
 	 <span class="headerLabel"   style="font-weight:bold;font-size: 18px;position: absolute;left: 22px;top: 65px;">{{ companySelected }} - {{scenarioName}}  </span>
     <button mat-button (click)="exportToXLSX()" matTooltip="Export to XLSX"

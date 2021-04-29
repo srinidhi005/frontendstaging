@@ -7,10 +7,13 @@
       [class.col-height]="imageLoaded == false ? true : false"
     >
       <img
-        class="mat-card-img"
+          class="mat-card-img"
         #imgLink
         [src]="authService.userPicture"
         alt="profile"
+
+        height="160" width="160"
+        f
         style="border-radius: 50px"
         [class.show]="imageLoaded == false ? true : false"
       />

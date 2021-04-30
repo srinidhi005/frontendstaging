@@ -101,7 +101,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   }
 
   checkForAccessibility(){
-    if(false && this.authService.currentUserRoles?.indexOf('Admin') >= 0 && this.authService.currentUserRoles?.indexOf('SuperAdmin') >= 0){
+    if(this.authService.currentUserRoles?.indexOf('Admin') >= 0 || this.authService.currentUserRoles?.indexOf('SuperAdmin') >= 0){
       this.router.navigate(['/Users']);
     }
     else{

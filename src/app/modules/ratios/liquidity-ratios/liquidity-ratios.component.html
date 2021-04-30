@@ -33,10 +33,10 @@
                 <ng-container *ngIf="col !== 'name'">
                   <td class="mat-cell cdk-column-name mat-column-name text-center" style="width:120px">
                     <ng-container *ngIf="isAverage(col); else simple">
-                      <b>{{element[col] | parseNumber}}%</b>
+                      <b>{{element[col] | parseNumber}}x</b>
                     </ng-container>
                     <ng-template #simple>
-                      {{element[col] | parseNumber}}%
+                      {{element[col] | parseNumber}}x
                     </ng-template>
                   </td>
                 </ng-container>

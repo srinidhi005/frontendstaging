@@ -34,10 +34,10 @@ export class KpiBsComponent implements OnInit {
   dataColumns: string[] = [
     'Avg. Days Sales Outstanding (DSO)',
     'Avg. Inventory Days',
-    'Avg. Other Current Assets (as % of Revenue)',
+    'Avg. Other Current Assets as % of Revenue',
     'Avg. Days Payable Outstanding (DPO)',
-    'Avg. Accrued Liabilities (as % of COGS)',
-    'Avg. Other Current Liabilties (as % of COGS)',
+    'Avg. Accrued Liabilities as % of COGS',
+    'Avg. Other Current Liabilties as % of COGS',
   ];
   percentageValues = [
     this.dataColumns[2],

@@ -674,7 +674,7 @@ export class DcfComponent implements OnInit {
 
   calculateDiscountFactor(){
     for (const [key, value] of this.financialObj){
-      if(key.indexOf("-") == -1 && key != "terminal"){
+      if(key.indexOf("-") == -1 ){
         const operand1 = (1 + (this.financialObj.get(key).wacc/100)) ** this.financialObj.get(key).Period
         this.financialObj.get(key).DiscountFactor = (1/operand1) * 100;
 		console.log("discount",this.financialObj.get(key).wacc)
@@ -707,8 +707,7 @@ export class DcfComponent implements OnInit {
 
   calculateTotalPresentValueFCF(){
 	const totalYear = this.years.find( fy => fy.indexOf("-") >= 0)
-	this.financialObj.get(totalYear).PresentFcf = this.financialObj.get(this.years[0]).PresentFcf+this.financialObj.get(this.years[1]).PresentFcf+this.financialObj.get(this.years[2]).PresentFcf
-	  this.financialObj.get(this.years[3]).PresentFcf+this.financialObj.get(this.years[4]).PresentFcf
+	this.financialObj.get(totalYear).PresentFcf = this.financialObj.get(this.years[0]).PresentFcf+this.financialObj.get(this.years[1]).PresentFcf+this.financialObj.get(this.years[2]).PresentFcf+this.financialObj.get(this.years[3]).PresentFcf+this.financialObj.get(this.years[4]).PresentFcf
   }
   
 

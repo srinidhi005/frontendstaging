@@ -349,7 +349,13 @@ for (let j=0; j<res.length; j++) {
         return { text: "(in millions)", italics: true, fillColor: '#164A5B', color: "#fff",margin: [0, 10 , 0, 10],}
       }
       else{
-        return {text: year, bold: true, fillColor: '#164A5B', color: "#fff", margin: [0, 10, 0, 10], border: [10, 10, 10, 10],alignment: 'right'}
+        return {text: index<(inMillionsYear.length-5)?year+"A":year+"E",
+		bold: true, 
+		fillColor: '#164A5B', 
+		color: "#fff", 
+		margin: [0, 10, 0, 10], 
+		border: [10, 10, 10, 10],
+		alignment: 'right'}
       }
     })
 

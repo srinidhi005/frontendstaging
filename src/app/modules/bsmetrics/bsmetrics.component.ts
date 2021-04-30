@@ -596,7 +596,7 @@ export class BsmetricsComponent implements OnInit {
         };
       } else {
         return {
-          text: year,
+           text: index<(inMillionsYear.length-5)?year+"A":year+"E",
           bold: true,
           fillColor: '#164A5B',
           color: '#fff',
